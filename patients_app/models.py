@@ -1,8 +1,11 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from django.contrib.auth.models import User
+
 
 class Patient(models.Model):
+    doctor = models.ForeignKey(User)
     first_name = models.CharField(max_length=200, blank=True)
     middle_name = models.CharField(max_length=200, blank=True)
     last_name = models.CharField(max_length=200, blank=True)
@@ -15,10 +18,10 @@ class Patient(models.Model):
     emergency_contact_phone = models.CharField(max_length=200, blank=True)
     emergency_contact_relation = models.CharField(max_length=200, blank=True)
     employer = models.CharField(max_length=200, blank=True)
-    employer_address = models.CharField(max_length=200, blank=True)
     employer_city = models.CharField(max_length=200, blank=True)
+    employer_address = models.CharField(max_length=200, blank=True)
     employer_state = models.CharField(max_length=200, blank=True)
-    employer_zip_code = models.CharField(max_length=200, blank=True)
+    employer_zip_code = models.CharField(blank=True, max_length=200)
     primary_care_physician = models.CharField(max_length=200, blank=True)
     zip_code = models.CharField(max_length=5, blank=True)
     state = models.CharField(max_length=2, blank=True)
@@ -31,9 +34,21 @@ class Patient(models.Model):
     def __str__(self):
         return "{0}, {1}".format(self.last_name, self.first_name)
 
+    @classmethod
+    def column_list(cls):
+        cols = ['doctor', 'first_name', 'middle_name', 'last_name', 'address',
+                'email', 'home_phone', 'cell_phone', 'city', 'zip_code',
+                'emergency_contact_name', 'emergency_contact_phone', 'state',
+                'emergency_contact_relation', 'employer', 'employer_city',
+                'employer_state', 'employer_address', 'primary_care_physician',
+                'social_security_number', 'responsible_party_name',
+                'responsible_party_phone', 'responsible_party_relation',
+                'responsible_party_email']
+        return cols
+
 
 class Problem(models.Model):
-    patient = models.ForeignKey('Patient')
+    patient = models.ForeignKey(Patient)
     date_changed = models.DateField(blank=True)
     date_diagnosis = models.DateField(blank=True)
     date_onset = models.DateField(blank=True)
@@ -41,6 +56,10 @@ class Problem(models.Model):
     name = models.CharField(max_length=200, blank=True)
     notes = models.TextField(blank=True)
     status = models.CharField(max_length=200, blank=True)
+
+    def __str__(self):
+        return self.name
+
 
 class Medication(models.Model):
     doctor_id = models.IntegerField()
@@ -58,14 +77,25 @@ class Medication(models.Model):
     order_status = models.CharField(max_length=200)
     status = models.CharField(max_length=200)
 
+    def __str__(self):
+        return self.name
+
+
 class Insurance(models.Model):
     rank = models.IntegerField()
     payer_name = models.CharField(max_length=200)
     state = models.CharField(max_length=2)
-    patient = models.ForeignKey('Patient')
+    patient = models.ForeignKey(Patient)
+
+    def __str__(self):
+        return self.payer_name
+
 
 class Allergies(models.Model):
     description = models.CharField(max_length=200, blank=True)
     notes = models.TextField(blank=True)
     reaction = models.CharField(max_length=200, blank=True)
     status = models.CharField(max_length=200, blank=True)
+
+    def __str__(self):
+        return self.description
