@@ -10,7 +10,15 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.9/ref/settings/
 """
 
+from secrets import CLIENT_ID, CLIENT_SECRET, REDIRECT_URL
+
 import os
+
+CLIENT_DATA = {
+    'client_id': CLIENT_ID,
+    'client_secret': CLIENT_SECRET,
+    'redirect_url': REDIRECT_URL
+}
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -37,6 +45,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'accounts_app.apps.AccountsAppConfig',
+    'patients_app.apps.PatientsAppConfig',
 ]
 
 MIDDLEWARE_CLASSES = [
