@@ -1,3 +1,15 @@
+/*general css*/
+body {
+  font-family: sans-serif;
+}
+
+#main {
+  margin: auto;
+  margin-top: 75px;
+  height: 85vh;
+  width: 85vw;
+}
+
 .btn {
   color: #fff;
   background-color: #42931F;
@@ -13,4 +25,21 @@
 .btn:hover {
   opacity: 1.0;
   box-shadow: 0px 0px 3px #808080;
+}
+
+.patient-input {
+  margin-bottom: 3px;
+  border-radius: 3px;
+  border: 1px solid #ccc;
+  padding: 3px 10px;
+  margin: 5px;
+  font-size: 14px;
+}
+
+
+#patient-form {
+  overflow-y: scroll;
+  max-height: 60%;
+  border-top: 1px solid #D3D3D3;
+  border-radius: 0px 0px 3px 3px;
 }

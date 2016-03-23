@@ -3,7 +3,7 @@ import requests
 from django.contrib.auth.models import User
 
 from drchrono_patients.settings import CLIENT_DATA
-from models import Patient, Problem, Medication, Insurance, Allergies
+from models import Doctor, Patient, Problem, Medication, Insurance, Allergies
 
 # Access drchrono API
 def get_drchrono_user(request_params):
@@ -12,7 +12,7 @@ def get_drchrono_user(request_params):
     """
     access_token = exchange_token(request_params)
     current_doctor_data = get_doctor_data(access_token)
-    user = save_user(current_doctor_data)
+    user = save_user(current_doctor_data, access_token)
     get_patients(user, access_token)
     return user
 
@@ -56,7 +56,7 @@ def get_user_data(header):
     return current_doctor_data
 
 
-def save_user(doctor_data):
+def save_user(doctor_data, access_token):
     user = User.objects.create_user(
         id=doctor_data['id'],
         username=doctor_data['username'],
@@ -65,6 +65,8 @@ def save_user(doctor_data):
         email=doctor_data['email']
     )
 
+    doctor = Doctor(user=user, token=access_token)
+    doctor.save()
     return user
 
 

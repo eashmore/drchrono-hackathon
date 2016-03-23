@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout, authenticate
 from django.views import generic
 from django.contrib import messages
@@ -68,5 +68,7 @@ class PatientView(generic.DetailView):
     form_class = PatientForm
 
     def get_context_data(self, **kwargs):
+        # import pdb; pdb.set_trace()
         context = super(PatientView, self).get_context_data(**kwargs)
-        context['form'] = self.form_class
+        context['form'] = self.form_class(instance=kwargs['object'])
+        return context

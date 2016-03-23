@@ -1,6 +1,104 @@
 {% extends 'patients_app/base.html' %}
 {% block content %}
 
-{{form}}
+<form id="patient-update-form" action="" method="" data-patient="{{patient.id}}">
+  {% csrf_token %}
+
+  <div id="patient-name">
+    <label>Last Name:
+      <input class="patient-input" type="text" name="last_name" value="{{ patient.last_name }}">
+    </label>
+    <label>First Name:
+      <input class="patient-input" type="text" name="first_name" value="{{ patient.first_name }}">
+    </label>
+    <label>Middle Name:
+      <input class="patient-input" type="text" name="middle_name" value="{{ patient.middle_name }}">
+    </label>
+  </div>
+
+  <div id="patient-address">
+    <label>Address:
+      <input class="patient-input" type="text" name="address" value="{{ patient.address }}">
+    </label>
+    <label>City:
+      <input class="patient-input" type="text" name="city" value="{{ patient.city }}">
+    </label>
+    <label>State:
+      <input class="patient-input" type="text" name="state" value="{{ patient.state }}">
+    </label>
+    <label>Zip Code
+      <input class="patient-input" type="text" name="zip_code" value="{{ patient.zip_code }}">
+    </label>
+  </div>
+
+  <div id="patient-contact">
+    <label>Email:
+      <input class="patient-input" type="text" name="email" value="{{ patient.email }}">
+    </label>
+    <label>Home Phone:
+      <input class="patient-input" type="text" name="home_phone" value="{{ patient.home_phone }}">
+    </label>
+    <label>Cell Phone:
+      <input class="patient-input" type="text" name="cell_phone" value="{{ patient.cell_phone }}">
+    </label>
+  </div>
+
+  <div id="patient-primary">
+    <label>Primary Care Physician:
+      <input class="patient-input" type="text" name="primary_care_physician" value="{{ patient.primary_care_physician }}">
+    </label>
+  </div>
+
+  <div id="patient-employer"> Employer Info
+    <br>
+    <label>Employer Name:
+      <input class="patient-input" type="text" name="employer" value="{{ patient.employer }}">
+    </label>
+    <label>Address:
+      <input class="patient-input" type="text" name="employer_address" value="{{ patient.employer_address }}">
+    </label>
+    <label>City:
+      <input class="patient-input" type="text" name="employer_city" value="{{ patient.employer_city }}">
+    </label>
+    <br>
+    <label>State:
+      <input class="patient-input" type="text" name="employer_state" value="{{ patient.employer_state }}">
+    </label>
+    <label>Zip Code:
+      <input class="patient-input" type="text" name="employer_zip_code" value="{{ patient.employer_zip_code }}">
+    </label>
+  </div>
+
+  <div id="patient-emergency">Emergency Contact Info
+    <br>
+    <label>Emergency Contact Name
+      <input class="patient-input" type="text" name="emergency_contact_name" value="{{ patient.emergency_contact_name }}">
+    </label>
+    <label>Relation
+      <input class="patient-input" type="text" name="emergency_contact_relation" value="{{ patient.emergency_contact_relation }}">
+    </label>
+    <label>Phone Number
+      <input class="patient-input" type="text" name="emergency_contact_phone" value="{{ patient.emergency_contact_phone }}">
+    </label>
+  </div>
+
+  <div id="patient-reponsible">Responsible Party
+    <br>
+    <label>Name:
+      <input class="patient-input" type="text" name="responsible_party_name" value="{{ patient.responsible_party_name }}">
+    </label>
+    <label>Relation:
+      <input class="patient-input" type="text" name="responsible_party_relation" value="{{ patient.responsible_party_relation }}">
+    </label>
+    <label>Phone Number:
+      <input class="patient-input" type="text" name="responsible_party_phone" value="{{ patient.responsible_party_phone }}">
+    </label>
+    <label>Email:
+      <input class="patient-input" type="text" name="responsible_party_email" value="{{ patient.responsible_party_email }}">
+    </label>
+  </div>
+
+  <button id="update-patient" class="btn" type="submit" name="button">Update</button>
+</form>
 
 {% endblock %}
