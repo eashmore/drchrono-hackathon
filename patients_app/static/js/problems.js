@@ -22,6 +22,7 @@ function handleProblem(e) {
   var $form = $('#problem-form');
   if ($form.attr("method") === 'PATCH') {
     e.preventDefault();
+    $('#save-screen').removeClass('display-none');
     var saveButton = e.currentTarget;
     saveButton.disabled = true;
     updateProblem($form, saveButton);
@@ -41,10 +42,12 @@ function updateProblem($form, button) {
     success: function() {
       button.disabled = false;
       $('#success-save').removeClass('display-none');
+      $('#save-screen').addClass('display-none');
     },
     error: function() {
       button.disabled = false;
       $('#error-save').removeClass('display-none');
+      $('#save-screen').addClass('display-none');
     }
   });
 }

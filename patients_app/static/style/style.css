@@ -118,6 +118,35 @@ body {
   opacity: 0.9;
 }
 
+#save-screen {
+  width: 100%;
+  height: 100%;
+  top: 0;
+  background-color: #fff;
+  opacity: 0.8;
+}
+
+#loading-screen {
+  text-align: center;
+  margin-top: 200px;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 25px;
+  width: 45%;
+  background-color: #309549;
+  color: #fff;
+  padding: 20px 0px;
+  padding-right: 70px;
+  border-radius: 5px;
+  display: inherit;
+}
+
+.center-screen {
+  position: absolute;
+  z-index: 1000;
+  left: 0;
+  right: 0;
+}
 
 /*nav*/
 #nav {
