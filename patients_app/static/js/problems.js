@@ -1,5 +1,8 @@
 function listenForProblemUpdate() {
-  setProblemStatus();
+  if ($('#problem-form') === 'PATCH') {
+    setProblemStatus();
+  }
+
   $('#save-problem-btn').click(handleProblem);
 }
 
@@ -37,6 +40,11 @@ function updateProblem($form, button) {
     },
     success: function() {
       button.disabled = false;
+      $('#success-save').removeClass('display-none');
+    },
+    error: function() {
+      button.disabled = false;
+      $('#error-save').removeClass('display-none');
     }
   });
 }

@@ -156,7 +156,10 @@ class Problem_Index_View(generic.DetailView):
             )
             problem.patient = patient
             problem.save()
+            messages.success(request, 'Save Successful')
             return redirect('patients_app:problem_edit', problem.id)
+        else:
+            messages.success(request, 'Save Failed')
 
         return render(request, 'patients_app/problems/problem_form.html', {
             'onset_date': datetime.date.today().isoformat(),

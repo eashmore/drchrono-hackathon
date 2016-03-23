@@ -27,6 +27,10 @@ body {
   box-shadow: 0px 0px 3px #808080;
 }
 
+.display-none {
+  display: none;
+}
+
 .patient-input {
   margin-bottom: 3px;
   border-radius: 3px;
@@ -91,6 +95,29 @@ body {
 .status-col {
   float: right;
 }
+
+#success-save {
+  background-color: #00C0FF;
+  border: 1px solid #faebcc;
+}
+
+#error-save {
+  background-color: #A21515;
+  border: 1px solid #790F0F;
+  color: #fff;
+}
+
+.save-result {
+  position: fixed;
+  left: 0;
+  right: 0;
+  text-align: center;
+  top: 35px;
+  padding: 5px 0px;
+  font-size: 24px;
+  opacity: 0.9;
+}
+
 
 /*nav*/
 #nav {
