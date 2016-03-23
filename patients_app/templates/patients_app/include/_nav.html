@@ -29,7 +29,13 @@
   </div>
 
   <div id="nav-right">
-    <div id="sign-out" class="nav-link nav-link-right">
+    <div id="nav-message" class="nav-link nav-link-left">
+      <a href="{% url 'patients_app:message' %}">
+        <div class="nav-class-text">
+          Leave a message
+        </div>
+      </a>
+    </div><div id="sign-out" class="nav-link nav-link-right">
       <a href="{% url 'patients_app:patient_logout' %}">
         <div class="nav-class-text">
           <i class="fa fa-sign-out fa-lg"></i> Log Out

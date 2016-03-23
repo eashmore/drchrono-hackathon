@@ -10,7 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.9/ref/settings/
 """
 
-from secrets import CLIENT_ID, CLIENT_SECRET, REDIRECT_URL
+from secrets import CLIENT_ID, CLIENT_SECRET, REDIRECT_URL, EMAIL_PASSWORD
 
 import os
 
@@ -19,6 +19,16 @@ CLIENT_DATA = {
     'client_secret': CLIENT_SECRET,
     'redirect_url': REDIRECT_URL
 }
+
+EMAIL_USE_TLS = True
+
+EMAIL_HOST = 'smtp.gmail.com'
+
+EMAIL_HOST_USER = 'drchrono.birthdays@gmail.com'
+
+EMAIL_HOST_PASSWORD = EMAIL_PASSWORD
+
+EMAIL_PORT = 587
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))

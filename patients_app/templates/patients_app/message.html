@@ -1,0 +1,14 @@
+{% extends 'patients_app/base.html' %}
+{% block content %}
+{% load staticfiles %}
+
+<h1>Leave a message for your doctor</h1>
+
+<form class="" action="{% url 'patients_app:message' %}" method="POST">
+  {% csrf_token %}
+  <textarea name="body" rows="8" cols="40"></textarea>
+  <br>
+  <button type="submit" class="btn" name="button">Send message</button>
+</form>
+
+{% endblock %}
