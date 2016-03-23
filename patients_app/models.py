@@ -6,30 +6,30 @@ from django.contrib.auth.models import User
 
 class Patient(models.Model):
     doctor = models.ForeignKey(User)
-    first_name = models.CharField(max_length=200, blank=True)
-    middle_name = models.CharField(max_length=200, blank=True)
-    last_name = models.CharField(max_length=200, blank=True)
-    address = models.CharField(max_length=200, blank=True)
-    email = models.CharField(max_length=200, blank=True)
-    home_phone = models.CharField(max_length=14, blank=True)
-    cell_phone = models.CharField(max_length=14, blank=True)
-    city = models.CharField(max_length=200, blank=True)
-    emergency_contact_name = models.CharField(max_length=200, blank=True)
-    emergency_contact_phone = models.CharField(max_length=200, blank=True)
-    emergency_contact_relation = models.CharField(max_length=200, blank=True)
-    employer = models.CharField(max_length=200, blank=True)
-    employer_city = models.CharField(max_length=200, blank=True)
-    employer_address = models.CharField(max_length=200, blank=True)
-    employer_state = models.CharField(max_length=200, blank=True)
-    employer_zip_code = models.CharField(blank=True, max_length=200)
-    primary_care_physician = models.CharField(max_length=200, blank=True)
-    zip_code = models.CharField(max_length=5, blank=True)
-    state = models.CharField(max_length=2, blank=True)
-    social_security_number = models.CharField(max_length=20, blank=True)
-    responsible_party_name = models.CharField(max_length=200, blank=True)
-    responsible_party_phone = models.CharField(max_length=14, blank=True)
-    responsible_party_relation = models.CharField(max_length=200, blank=True)
-    responsible_party_email = models.CharField(max_length=200, blank=True)
+    first_name = models.CharField(max_length=200, null=True, blank=True)
+    middle_name = models.CharField(max_length=200, null=True, blank=True)
+    last_name = models.CharField(max_length=200, null=True, blank=True)
+    address = models.CharField(max_length=200, null=True, blank=True)
+    email = models.CharField(max_length=200, null=True, blank=True)
+    home_phone = models.CharField(max_length=14, null=True, blank=True)
+    cell_phone = models.CharField(max_length=14, null=True, blank=True)
+    city = models.CharField(max_length=200, null=True, blank=True)
+    emergency_contact_name = models.CharField(max_length=200, null=True, blank=True)
+    emergency_contact_phone = models.CharField(max_length=200, null=True, blank=True)
+    emergency_contact_relation = models.CharField(max_length=200, null=True, blank=True)
+    employer = models.CharField(max_length=200, null=True, blank=True)
+    employer_city = models.CharField(max_length=200, null=True, blank=True)
+    employer_address = models.CharField(max_length=200, null=True, blank=True)
+    employer_state = models.CharField(max_length=200, null=True, blank=True)
+    employer_zip_code = models.CharField(null=True, blank=True, max_length=200)
+    primary_care_physician = models.CharField(max_length=200, null=True, blank=True)
+    zip_code = models.CharField(max_length=5, null=True, blank=True)
+    state = models.CharField(max_length=2, null=True, blank=True)
+    social_security_number = models.CharField(max_length=20, null=True, blank=True)
+    responsible_party_name = models.CharField(max_length=200, null=True, blank=True)
+    responsible_party_phone = models.CharField(max_length=14, null=True, blank=True)
+    responsible_party_relation = models.CharField(max_length=200, null=True, blank=True)
+    responsible_party_email = models.CharField(max_length=200, null=True, blank=True)
 
     def __str__(self):
         return "{0}, {1}".format(self.last_name, self.first_name)
@@ -49,33 +49,34 @@ class Patient(models.Model):
 
 class Problem(models.Model):
     patient = models.ForeignKey(Patient)
-    date_changed = models.DateField(blank=True)
-    date_diagnosis = models.DateField(blank=True)
-    date_onset = models.DateField(blank=True)
-    description = models.TextField(blank=True)
-    name = models.CharField(max_length=200, blank=True)
-    notes = models.TextField(blank=True)
-    status = models.CharField(max_length=200, blank=True)
+    date_changed = models.DateField(null=True, blank=True)
+    date_diagnosis = models.DateField(null=True, blank=True)
+    date_onset = models.DateField(null=True, blank=True)
+    description = models.TextField(null=True, blank=True)
+    name = models.CharField(max_length=200, null=True, blank=True)
+    notes = models.TextField(null=True, blank=True)
+    status = models.CharField(max_length=200, null=True, blank=True)
 
     def __str__(self):
         return self.name
 
 
 class Medication(models.Model):
-    doctor_id = models.IntegerField()
+    doctor = models.ForeignKey(User)
+    patient = models.ForeignKey(Patient)
     daw = models.BooleanField()
     name = models.CharField(max_length=200)
     prn = models.BooleanField()
-    date_prescribed = models.DateField(blank=True)
-    date_started_taking = models.DateField(blank=True)
-    date_stopped_taking = models.DateField(blank=True)
-    dispense_quantity = models.FloatField(blank=True)
-    dosage_quantity = models.FloatField(blank=True)
-    notes = models.TextField(blank=True)
-    frequency = models.CharField(max_length=200)
-    number_refills = models.IntegerField()
-    order_status = models.CharField(max_length=200)
-    status = models.CharField(max_length=200)
+    date_prescribed = models.DateField(null=True, blank=True)
+    date_started_taking = models.DateField(null=True, blank=True)
+    date_stopped_taking = models.DateField(null=True, blank=True)
+    dispense_quantity = models.FloatField(null=True, blank=True)
+    dosage_quantity = models.FloatField(null=True, blank=True)
+    notes = models.TextField(null=True, blank=True)
+    frequency = models.CharField(max_length=200, blank=True, null=True)
+    number_refills = models.IntegerField(blank=True, null=True)
+    order_status = models.CharField(max_length=200, blank=True, null=True)
+    status = models.CharField(max_length=200, blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -92,10 +93,10 @@ class Insurance(models.Model):
 
 
 class Allergies(models.Model):
-    description = models.CharField(max_length=200, blank=True)
-    notes = models.TextField(blank=True)
-    reaction = models.CharField(max_length=200, blank=True)
-    status = models.CharField(max_length=200, blank=True)
+    description = models.CharField(max_length=200, null=True, blank=True)
+    notes = models.TextField(null=True, blank=True)
+    reaction = models.CharField(max_length=200, null=True, blank=True)
+    status = models.CharField(max_length=200, null=True, blank=True)
 
     def __str__(self):
         return self.description

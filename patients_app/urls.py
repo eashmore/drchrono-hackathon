@@ -2,7 +2,7 @@ from django.conf.urls import url
 
 from . import views
 
-app_name = 'account_app'
+app_name = 'patients_app'
 
 urlpatterns = [
     url(r'accounts/login/$', views.login_view, name='login'),

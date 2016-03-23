@@ -69,19 +69,11 @@ def save_user(doctor_data):
 
 
 def get_patients(user, access_token):
-    """
-    Find the current user's patients and insert/update patient's row in db
-    """
-    patients_url = 'https://drchrono.com/api/patients'
-    header = {'Authorization': 'Bearer %s' % access_token}
-    while patients_url:
-        response = requests.get(patients_url, headers=header)
-        data = response.json()
-        for patient_data in data['results']:
-            patient = save_patient(patient_data, user)
-            get_patient_data(patient, header)
-
-        patients_url = data['next']
+    endpoint = 'patients'
+    patients = get_paginated_data(endpoint, access_token)
+    for patient_data in patients:
+        patient = save_patient(patient_data, user)
+        get_patient_data(patient, access_token, user)
 
 
 def save_patient(patient_data, user):
@@ -91,30 +83,32 @@ def save_patient(patient_data, user):
         kwargs[attr] = patient_data[attr]
 
     kwargs['doctor'] = user
+    kwargs['id'] = patient_data['id']
     patient = Patient(**kwargs)
 
     patient.save()
     return patient
 
-def get_patient_data(patient, header):
-    endpoint = 'problems/?patient=%s' % patient.id
-    problems = get_drchrono_data(endpoint, header)
-    import pdb; pdb.set_trace()
 
+def get_patient_data(patient, access_token, user):
+    problem_endpoint = 'problems?patient=%s' % patient.id
+    problems = get_paginated_data(problem_endpoint, access_token)
     save_problems(problems, patient)
 
-    medications = get_drchrono_data('medications', header)
-    save_medications(medications, patient)
+    med_endpoint = 'medications?patient=%s' % patient.id
+    medications = get_paginated_data(med_endpoint, access_token)
+    save_medications(medications, patient, user)
+
+    allergies_endpoint = 'allergies?patient=%s' % patient.id
+    allergies = get_paginated_data(allergies_endpoint, access_token)
+    save_allergies(allergies, patient)
 
     # insurances = get_drchrono_data('insurances', header)
     # save_insurances(insurances, patient)
 
-    allergies = get_drchrono_data('allergies', header)
-    save_allergies(allergies, patient)
-
 
 def save_problems(problem_data, patient):
-    for data in problem_data['results']:
+    for data in problem_data:
         problem = Problem(
             patient = patient,
             date_changed = data['date_changed'],
@@ -128,10 +122,11 @@ def save_problems(problem_data, patient):
         problem.save()
 
 
-def save_medications(med_data, patient):
-    for data in med_data['results']:
+def save_medications(med_data, patient, user):
+    for data in med_data:
         medication = Medication(
             patient = patient,
+            doctor = user,
             daw = data['daw'],
             name = data['name'],
             prn = data['prn'],
@@ -161,12 +156,14 @@ def save_medications(med_data, patient):
 
 
 def save_allergies(allergies_data, patient):
-    for data in allergies_data['results']:
+    # import pdb; pdb.set_trace()
+
+    for data in allergies_data:
         allergies = Allergies(
-            description = data['description'],
             notes = data['notes'],
             reaction = data['reaction'],
-            status = data['status']
+            status = data['status'],
+            # description = data['description'],
         )
         allergies.save()
 
@@ -182,3 +179,17 @@ def get_drchrono_data(endpoint, header):
     response.raise_for_status()
     data = response.json()
     return data
+
+def get_paginated_data(endpoint, access_token):
+    url = 'https://drchrono.com/api/%s' % endpoint
+    header = {'Authorization': 'Bearer %s' % access_token}
+    objects = []
+    while url:
+        response = requests.get(url, headers=header)
+        data = response.json()
+        for object_data in data['results']:
+            objects.append(object_data)
+
+        url = data['next']
+
+    return objects
