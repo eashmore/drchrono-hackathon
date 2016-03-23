@@ -4,7 +4,9 @@
 <div id="clinical-table" class="bold">
   PROBLEMS
 </div>
-<button type="button" name="button">Add new problem</button>
+<a href="{% url 'patients_app:problem_new' %}">
+  <button type="button" class="btn" name="button">Add new problem</button>
+</a>
 
 <div id="clinical-table-head" class="table-content bold">
   <div class="clinical-col">Name</div>

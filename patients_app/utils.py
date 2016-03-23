@@ -112,6 +112,7 @@ def get_patient_data(patient, access_token, user):
 def save_problems(problem_data, patient):
     for data in problem_data:
         problem = Problem(
+            id = data['id'],
             patient = patient,
             date_changed = data['date_changed'],
             date_diagnosis = data['date_diagnosis'],
@@ -127,6 +128,7 @@ def save_problems(problem_data, patient):
 def save_medications(med_data, patient, user):
     for data in med_data:
         medication = Medication(
+            id = data['id'],
             patient = patient,
             doctor = user,
             daw = data['daw'],
@@ -162,6 +164,7 @@ def save_allergies(allergies_data, patient):
 
     for data in allergies_data:
         allergies = Allergies(
+            id = data['id'],
             notes = data['notes'],
             reaction = data['reaction'],
             status = data['status'],

@@ -17,7 +17,9 @@ urlpatterns = [
     url(r'^patient/problems/$', login_required(views.problems_view),
         name='problem_list'),
     url(r'^patient/problem/(?P<pk>[0-9]+)/$',
-        login_required(views.problem_view), name='problem_edit'),
+        login_required(views.problem_edit_view), name='problem_edit'),
+    url(r'^patient/problems/new$', login_required(views.add_problem_view),
+        name='problem_new'),
 
 
     url(r'^patient/(?P<pk>[0-9]+)/$', login_required(views.PatientView.as_view()),

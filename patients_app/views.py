@@ -91,7 +91,7 @@ def problems_view(request):
         'problems': problems
     })
 
-def problem_view(request, **kwargs):
+def problem_edit_view(request, **kwargs):
     problem = get_object_or_404(Problem, pk=kwargs['pk'])
     if problem.date_onset:
         onset_date = problem.date_onset.isoformat()
@@ -108,9 +108,14 @@ def problem_view(request, **kwargs):
         'onset_date': onset_date,
         'diagnosis_date': diagnosis_date,
         'method': 'PATCH',
-        'action': 'problem_view'
     })
 
+def add_problem_view(request):
+    return render(request, 'patients_app/problems/problem_form.html', {
+        'onset_date': datetime.date.today().isoformat(),
+        'diagnosis_date': datetime.date.today().isoformat(),
+        'method': 'POST',
+    })
 
 class PatientView(generic.DetailView):
     model = Patient
@@ -141,11 +146,23 @@ class Problem_Index_View(generic.DetailView):
     def post(self, request, **kwargs):
         form = self.form_class(request.POST)
         if form.is_valid():
-            problem = form.save()
-            problemJSON = serializers.serialize("json", [problem])
-            return HttpResponse(problemJSON, content_type='application/json')
+            problem = form.save(commit=False)
+            problem.date_onset = datetime.datetime.strptime(
+                request.POST['date_onset'], '%Y-%m-%d')
+            problem.date_diagnosis = datetime.datetime.strptime(
+                request.POST['date_diagnosis'], '%Y-%m-%d')
+            patient = get_object_or_404(
+                Patient, pk=request.user.doctor.current_patient_id
+            )
+            problem.patient = patient
+            problem.save()
+            return redirect('patients_app:problem_edit', problem.id)
 
-        return HttpResponse(status=500)
+        return render(request, 'patients_app/problems/problem_form.html', {
+            'onset_date': datetime.date.today().isoformat(),
+            'diagnosis_date': datetime.date.today().isoformat(),
+            'method': 'POST',
+        })
 
 
 class ProblemView(generic.DetailView):
@@ -163,7 +180,6 @@ class ProblemView(generic.DetailView):
         form = self.form_class(data, instance=problem)
         if form.is_valid():
             problem = form.save(commit=False)
-            import pdb; pdb.set_trace()
             problem.date_onset = datetime.datetime.strptime(
                 data['date_onset'], '%Y-%m-%d')
             problem.date_diagnosis = datetime.datetime.strptime(

@@ -13,7 +13,7 @@ class ProblemForm(forms.ModelForm):
 
     class Meta:
         model = Problem
-        fields = ['status', 'notes']
+        fields = ['status', 'notes', 'name', 'description']
 
 class MedicationForm(forms.ModelForm):
 
