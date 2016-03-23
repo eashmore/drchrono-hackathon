@@ -1,0 +1,15 @@
+{% extends 'patients_app/base.html' %}
+{% block content %}
+
+<form class="" action="{% url 'patients_app:home' %}" method="POST">
+  {% csrf_token %}
+  <input type="text" name="first_name" value="" placeholder="Your first name">
+  <input type="text" name="last_name" value="" placeholder="Your last name">
+  <input type="text" name="ssn" value=""
+    placeholder="Last 4 digits of your SSN"
+  >
+
+  <button class="btn" type="submit" name="button">To Profile</button>
+</form>
+
+{% endblock %}

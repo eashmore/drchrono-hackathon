@@ -1,11 +1,15 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
+from django.views import generic
+from django.contrib import messages
 
 import string
 import random
 
-from drchrono_patients.settings import CLIENT_DATA
+from models import Patient, Problem, Medication, Allergies
 from utils import get_drchrono_user
+from forms import PatientForm
+from drchrono_patients.settings import CLIENT_DATA
 
 
 def login_view(request):
@@ -14,7 +18,7 @@ def login_view(request):
         'redirect_url': CLIENT_DATA['redirect_url'],
     }
 
-    return render(request, 'accounts_app/login.html', context)
+    return render(request, 'patients_app/login.html', context)
 
 
 def oauth_view(request):
@@ -35,9 +39,34 @@ def oauth_view(request):
             password=set_random_password(user)
         )
         login(request, auth_user)
-        return redirect('patients_app:home_view')
+        return redirect('patients_app:home')
 
 
 def logout_view(request):
     logout(request)
-    return redirect('account_app:login')
+    return redirect('patients_app:login')
+
+def home_view(request):
+    if request.method == 'POST':
+        patients = Patient.objects.all()
+        patient = patients.filter(
+            last_name=request.POST['last_name'],
+            first_name=request.POST['first_name'],
+            social_security_number__endswith=request.POST['ssn']
+        )
+        if patient.exists():
+            return redirect('patients_app:patient', patient.first().id)
+        else:
+            messages.error(request, 'Patient was not found.')
+
+    return render(request, 'patients_app/index.html')
+
+
+class PatientView(generic.DetailView):
+    model = Patient
+    template_name = 'patients_app/patient.html'
+    form_class = PatientForm
+
+    def get_context_data(self, **kwargs):
+        context = super(PatientView, self).get_context_data(**kwargs)
+        context['form'] = self.form_class
