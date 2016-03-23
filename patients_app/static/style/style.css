@@ -31,7 +31,16 @@ body {
   display: none;
 }
 
-.patient-input {
+.text-area {
+  width: 75%;
+  max-width: 700px;
+  font-size: 15px;
+  border: 1px solid #ccc;
+  box-shadow: 0 1px 1px #ccc;
+  padding: 10px;
+}
+
+.basic-input {
   margin-bottom: 3px;
   border-radius: 3px;
   border: 1px solid #ccc;
@@ -39,7 +48,6 @@ body {
   margin: 5px;
   font-size: 14px;
 }
-
 
 #patient-form {
   overflow-y: scroll;
@@ -71,6 +79,7 @@ body {
 }
 
 #clinical-table-head {
+  margin-top: 10px;
   padding-top: 4px;
   padding-bottom: 4px;
   padding-right: 15px;
@@ -88,12 +97,14 @@ body {
 }
 
 .clinical-col {
+  margin-left: 10px;
   display:inline-block;
   word-wrap: break-word;
 }
 
 .status-col {
   float: right;
+  margin-right: 10px;
 }
 
 #success-save {

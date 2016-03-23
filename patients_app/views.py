@@ -71,6 +71,9 @@ def home_view(request):
         else:
             messages.error(request, 'Patient was not found.')
 
+    doctor = request.user.doctor
+    doctor.current_patient_id = None
+    doctor.save()
     return render(request, 'patients_app/index.html')
 
 

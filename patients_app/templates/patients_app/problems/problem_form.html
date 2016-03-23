@@ -7,13 +7,13 @@
   {% csrf_token %}
   <div id="problem-info">
     <label>Name of problem:
-      <input class="patient-input" type="text" name="name" value="{{ problem.name }}">
+      <input class="basic-input" type="text" name="name" value="{{ problem.name }}">
     </label>
     <label>
       <div class="">
         Description:
       </div>
-      <textarea name="description" rows="8" cols="40">{{ problem.description }}</textarea>
+      <textarea class="text-area" name="description" rows="8" cols="40">{{ problem.description }}</textarea>
     </label><br>
     <label>Status:
       <select name="status">
@@ -38,7 +38,7 @@
       <div class="">
         Additional notes:
       </div>
-      <textarea name="notes" rows="8" cols="40">{{ problem.notes }}</textarea>
+      <textarea class="text-area" name="notes" rows="8" cols="40">{{ problem.notes }}</textarea>
     </label>
 
   </div>
