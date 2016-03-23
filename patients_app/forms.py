@@ -6,7 +6,8 @@ class PatientForm(forms.ModelForm):
 
     class Meta:
         model = Patient
-        exclude = ['doctor', 'social_security_number']
+        exclude = ['doctor', 'social_security_number', 'first_name',
+                   'last_name', 'middle_name']
 
 class ProblemForm(forms.ModelForm):
 

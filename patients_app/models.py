@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 class Doctor(models.Model):
     user = models.OneToOneField(User, primary_key=True)
     token = models.CharField(max_length=200)
+    current_patient_id = models.IntegerField(null=True, blank=True)
 
 
 class Patient(models.Model):

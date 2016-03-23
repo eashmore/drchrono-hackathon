@@ -1,7 +1,7 @@
 {% extends 'patients_app/base.html' %}
 {% block content %}
 
-<a href="https://drchrono.com/o/authorize/?redirect_uri={{redirect_url}}&response_type=code&client_id={{client_id}}&scope=patients:read%20patients:read%20user:read%20clinical:read">
+<a href="https://drchrono.com/o/authorize/?redirect_uri={{redirect_url}}&response_type=code&client_id={{client_id}}&scope=patients:read%20patients:write%20user:read%20clinical:read">
   <button class="btn" type="button" name="button">Sign in with drchrono</button>
 </a>
 

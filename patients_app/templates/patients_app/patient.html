@@ -1,21 +1,11 @@
 {% extends 'patients_app/base.html' %}
 {% block content %}
 
-<form id="patient-update-form" action="" method="" data-patient="{{patient.id}}">
+<h1>{{ patient.first_name }} {{ patient.last_name }}</h1>
+<form id="patient-update-form" action="{% url 'patients_app:patient' patient.id %}" method="POST">
+  <input type="hidden" name="_method" value="PATCH">
+
   {% csrf_token %}
-
-  <div id="patient-name">
-    <label>Last Name:
-      <input class="patient-input" type="text" name="last_name" value="{{ patient.last_name }}">
-    </label>
-    <label>First Name:
-      <input class="patient-input" type="text" name="first_name" value="{{ patient.first_name }}">
-    </label>
-    <label>Middle Name:
-      <input class="patient-input" type="text" name="middle_name" value="{{ patient.middle_name }}">
-    </label>
-  </div>
-
   <div id="patient-address">
     <label>Address:
       <input class="patient-input" type="text" name="address" value="{{ patient.address }}">
@@ -98,7 +88,7 @@
     </label>
   </div>
 
-  <button id="update-patient" class="btn" type="submit" name="button">Update</button>
+  <button id="update-patient-btn" class="btn" type="submit" name="button">Update</button>
 </form>
 
 {% endblock %}

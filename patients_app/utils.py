@@ -1,6 +1,6 @@
-import requests
-
 from django.contrib.auth.models import User
+
+import requests
 
 from drchrono_patients.settings import CLIENT_DATA
 from models import Doctor, Patient, Problem, Medication, Insurance, Allergies
