@@ -1,5 +1,18 @@
 function listenForProblemUpdate() {
+  setProblemStatus();
   $('#save-problem-btn').click(handleProblem);
+}
+
+function setProblemStatus() {
+    problemId = $('#problem-form').data('problem');
+    $.ajax({
+      url: '/api/problem/' + problemId + '/',
+      type: 'GET',
+      success: function(data) {
+        status = data[0].fields.status;
+        $('#problem-' + status).attr('selected', true);
+      }
+    });
 }
 
 function handleProblem(e) {

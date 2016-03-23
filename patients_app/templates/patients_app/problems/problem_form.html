@@ -2,15 +2,25 @@
 {% block content %}
 
 <h1>{{ problem.name }}</h1>
-<p>
-  Description: {{ problem.description }}
-</p>
 <form id="problem-form" action="" method="{{ method }}" data-problem="{{ problem.id }}">
 
   {% csrf_token %}
-  <div id="problem-status">
+  <div id="problem-info">
+    <label>Name of problem:
+      <input class="patient-input" type="text" name="name" value="{{ problem.name }}">
+    </label>
+    <label>
+      <div class="">
+        Description:
+      </div>
+      <textarea name="description" rows="8" cols="40">{{ problem.description }}</textarea>
+    </label><br>
     <label>Status:
-      <input class="patient-input" type="text" name="status" value="{{ problem.status }}">
+      <select name="status">
+        <option id="problem-active" value="active">active</option>
+        <option id="problem-inactive" value="inactive">inactive</option>
+        <option id="problem-resolved" value="resolved">resolved</option>
+      </select>
     </label><br>
   </div>
 

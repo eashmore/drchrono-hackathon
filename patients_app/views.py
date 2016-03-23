@@ -152,12 +152,18 @@ class ProblemView(generic.DetailView):
     model = Problem
     form_class = ProblemForm
 
+    def get(self, request, **kwargs):
+        problem = get_object_or_404(Problem, pk=kwargs['pk'])
+        problemJSON = serializers.serialize("json", [problem])
+        return HttpResponse(problemJSON, content_type='application/json')
+
     def patch(self, request, **kwargs):
         problem = get_object_or_404(Problem, pk=kwargs['pk'])
         data = QueryDict(request.body)
         form = self.form_class(data, instance=problem)
         if form.is_valid():
             problem = form.save(commit=False)
+            import pdb; pdb.set_trace()
             problem.date_onset = datetime.datetime.strptime(
                 data['date_onset'], '%Y-%m-%d')
             problem.date_diagnosis = datetime.datetime.strptime(
