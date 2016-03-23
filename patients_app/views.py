@@ -86,7 +86,7 @@ def problems_view(request):
     patient = get_object_or_404(Patient,
         pk=request.user.doctor.current_patient_id)
     problems = patient.problem_set.all()
-    return render(request, 'patients_app/problems/index.html', {
+    return render(request, 'patients_app/problems/problem_index.html', {
         'problems': problems
     })
 

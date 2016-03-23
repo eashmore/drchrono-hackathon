@@ -1,5 +1,7 @@
 {% for problem in problems %}
   <div class="clinical-item" data-problem="{{problem.id}}">
     <div class="clinical-col">{{ problem.name }}</div>
+  </div><div class="clinical-item" data-problem="{{problem.id}}">
+    <div class="clinical-col">{{ problem.status }}</div>
   </div>
 {% endfor %}
