@@ -1,39 +1,39 @@
-function listenForProblemUpdate() {
-  if ($('#problem-form').attr('method') === 'PATCH') {
-    setProblemStatus();
+function listenForAllergyUpdate() {
+  if ($('#allergy-form').attr('method') === 'PATCH') {
+    setAllergyStatus();
   }
 
-  $('#save-problem-btn').click(handleProblem);
+  $('#save-allergy-btn').click(handleAllergy);
 }
 
-function setProblemStatus() {
-    problemId = $('#problem-form').data('problem');
+function setAllergyStatus() {
+    allergyId = $('#allergy-form').data('allergy');
     $.ajax({
-      url: '/api/problem/' + problemId + '/',
+      url: '/api/allergy/' + allergyId + '/',
       type: 'GET',
       success: function(data) {
         status = data[0].fields.status;
-        $('#problem-' + status).attr('selected', true);
+        $('#allergy-' + status).attr('selected', true);
       }
     });
 }
 
-function handleProblem(e) {
-  var $form = $('#problem-form');
+function handleAllergy(e) {
+  var $form = $('#allergy-form');
   if ($form.attr("method") === 'PATCH') {
     e.preventDefault();
     $('#save-screen').removeClass('display-none');
     var saveButton = e.currentTarget;
     saveButton.disabled = true;
-    updateProblem($form, saveButton);
+    updateAllergy($form, saveButton);
   }
 }
 
-function updateProblem($form, button) {
+function updateAllergy($form, button) {
   data = $form.serialize();
-  problemId = $form.data('problem');
+  allergyId = $form.data('allergy');
   $.ajax({
-    url: '/api/problem/' + problemId + '/',
+    url: '/api/allergy/' + allergyId + '/',
     type: 'PATCH',
     data: data,
     beforeSend: function(xhr) {
@@ -70,5 +70,5 @@ function getCookie(name) {
 }
 
 (function() {
-  listenForProblemUpdate();
+  listenForAllergyUpdate();
 })();

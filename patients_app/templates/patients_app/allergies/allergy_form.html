@@ -1,0 +1,40 @@
+{% extends 'patients_app/base.html' %}
+{% block content %}
+{% load staticfiles %}
+
+<h1>Allergy</h1>
+<form id="allergy-form" action="{% url 'patients_app:allergy_index' %}" method="{{ method }}" data-allergy="{{ allergy.id }}">
+
+  {% csrf_token %}
+  <div id="allergy-info">
+    <label>Allergic reaction:
+      <input class="basic-input" type="text" name="reaction" value="{{ allergy.reaction }}">
+    </label>
+    <label>Status:
+      <select name="status">
+        <option id="allergy-active" value="active">active</option>
+        <option id="allergy-inactive" value="inactive">inactive</option>
+        <option id="allergy-resolved" value="resolved">resolved</option>
+      </select>
+    </label><br>
+  </div>
+
+  <div id="allergy-notes">
+    <label>
+      <div class="">
+        Additional notes:
+      </div>
+      <textarea class="text-area" name="notes" rows="8" cols="40">{{ allergy.notes }}</textarea>
+    </label>
+
+  </div>
+
+  <button id="save-allergy-btn" class="btn" type="submit" name="button">Save</button>
+</form>
+
+{% include 'patients_app/include/_save_screen.html' %}
+
+<script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
+<script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript" src="{% static 'js/allergy.js' %}"></script>
+{% endblock %}

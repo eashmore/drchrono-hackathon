@@ -1,6 +1,6 @@
 from django import forms
 
-from models import Patient, Problem, Medication, Allergies
+from models import Patient, Problem, Medication, Allergy
 
 class PatientForm(forms.ModelForm):
 
@@ -21,8 +21,8 @@ class MedicationForm(forms.ModelForm):
         model = Medication
         exclude = ['patient']
 
-class AllergiesForm(forms.ModelForm):
+class AllergyForm(forms.ModelForm):
 
     class Meta:
-        model = Allergies
-        fields = '__all__'
+        model = Allergy
+        exclude = ['patient']

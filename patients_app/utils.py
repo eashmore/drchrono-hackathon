@@ -6,7 +6,7 @@ import requests
 
 from drchrono_patients.settings import CLIENT_DATA, EMAIL_HOST_USER
 
-from models import Doctor, Patient, Problem, Medication, Insurance, Allergies
+from models import Doctor, Patient, Problem, Medication, Insurance, Allergy
 
 
 def send_message(email, message, patient):
@@ -220,15 +220,14 @@ def save_medications(med_data, patient, user):
 
 
 def save_allergies(allergies_data, patient):
-    # import pdb; pdb.set_trace()
 
     for data in allergies_data:
-        allergies = Allergies(
+        allergies = Allergy(
+            patient = patient,
             id = data['id'],
             notes = data['notes'],
             reaction = data['reaction'],
             status = data['status'],
-            # description = data['description'],
         )
         allergies.save()
 

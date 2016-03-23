@@ -12,9 +12,9 @@ import random
 import requests
 import datetime
 
-from models import Doctor, Patient, Problem, Medication, Allergies
+from models import Doctor, Patient, Problem, Medication, Allergy
 from utils import get_drchrono_user, send_message, send_update_message
-from forms import PatientForm, ProblemForm
+from forms import PatientForm, ProblemForm, AllergyForm
 from drchrono_patients.settings import CLIENT_DATA
 
 
@@ -142,6 +142,30 @@ def add_problem_view(request):
     })
 
 
+def allergies_view(request):
+    patient = get_object_or_404(
+        Patient, pk=request.user.doctor.current_patient_id
+    )
+    allergies = patient.allergy_set.all()
+    return render(request, 'patients_app/allergies/allergy_index.html', {
+        'allergies': allergies
+    })
+
+
+def allergy_edit_view(request, **kwargs):
+    allergy = get_object_or_404(Allergy, pk=kwargs['pk'])
+    return render(request, 'patients_app/allergies/allergy_form.html', {
+        'allergy': allergy,
+        'method': 'PATCH',
+    })
+
+
+def add_allergy_view(request):
+    return render(request, 'patients_app/allergies/allergy_form.html', {
+        'method': 'POST',
+    })
+
+
 class PatientView(generic.DetailView):
     model = Patient
     form_class = PatientForm
@@ -172,17 +196,13 @@ class Problem_Index_View(generic.DetailView):
         form = self.form_class(request.POST)
         if form.is_valid():
             problem = form.save(commit=False)
-            problem.date_onset = datetime.datetime.strptime(
-                request.POST['date_onset'], '%Y-%m-%d')
-            problem.date_diagnosis = datetime.datetime.strptime(
-                request.POST['date_diagnosis'], '%Y-%m-%d')
+            problem.set_dates(request.POST)
             patient = get_object_or_404(
                 Patient, pk=request.user.doctor.current_patient_id
             )
             problem.patient = patient
             problem.save()
-            doctor_email = request.user.email
-            send_update_message(doctor_email, patient, problem)
+            send_update_message(request.user.email, patient, problem)
             messages.success(request, 'Save Successful')
             return redirect('patients_app:problem_edit', problem.id)
         else:
@@ -211,18 +231,65 @@ class ProblemView(generic.DetailView):
         form = self.form_class(data, instance=problem)
         if form.is_valid():
             problem = form.save(commit=False)
-            problem.date_onset = datetime.datetime.strptime(
-                data['date_onset'], '%Y-%m-%d')
-            problem.date_diagnosis = datetime.datetime.strptime(
-                data['date_diagnosis'], '%Y-%m-%d')
+            problem.set_dates(data)
             problem.save()
-            doctor_email = request.user.email
             patient = get_object_or_404(
                 Patient, pk=request.user.doctor.current_patient_id
             )
-            send_update_message(doctor_email, patient, problem, old_data)
+            send_update_message(request.user.email, patient, problem, old_data)
             problemJSON = serializers.serialize("json", [problem])
             return HttpResponse(problemJSON, content_type='application/json')
+
+        return HttpResponse(status=500)
+
+
+class Allergy_Index_View(generic.DetailView):
+    model = Allergy
+    form_class = AllergyForm
+
+    def post(self, request, **kwargs):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            allergy = form.save(commit=False)
+            patient = get_object_or_404(
+                Patient, pk=request.user.doctor.current_patient_id
+            )
+            allergy.patient = patient
+            allergy.save()
+            # send_update_message(request.user.email, patient, allergy)
+            messages.success(request, 'Save Successful')
+            return redirect('patients_app:allergy_edit', allergy.id)
+        else:
+            messages.success(request, 'Save Failed')
+
+        return render(request, 'patients_app/allergies/allergy_form.html', {
+            'method': 'POST',
+        })
+
+
+class AllergyView(generic.DetailView):
+    model = Allergy
+    form_class = AllergyForm
+
+    def get(self, request, **kwargs):
+        allegy = get_object_or_404(Allergy, pk=kwargs['pk'])
+        allegyJSON = serializers.serialize("json", [allegy])
+        return HttpResponse(allegyJSON, content_type='application/json')
+
+    def patch(self, request, **kwargs):
+        allegy = get_object_or_404(Allergy, pk=kwargs['pk'])
+        old_data = model_to_dict(allegy)
+        data = QueryDict(request.body)
+        form = self.form_class(data, instance=allegy)
+        if form.is_valid():
+            allegy = form.save(commit=False)
+            allegy.save()
+            patient = get_object_or_404(
+                Patient, pk=request.user.doctor.current_patient_id
+            )
+            # send_update_message(request.user.email, patient, allegy, old_data)
+            allegyJSON = serializers.serialize("json", [allegy])
+            return HttpResponse(allegyJSON, content_type='application/json')
 
         return HttpResponse(status=500)
 

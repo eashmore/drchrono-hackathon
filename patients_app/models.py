@@ -3,6 +3,8 @@ from __future__ import unicode_literals
 from django.db import models
 from django.contrib.auth.models import User
 
+import datetime
+
 
 class Doctor(models.Model):
     user = models.OneToOneField(User, primary_key=True)
@@ -66,6 +68,14 @@ class Problem(models.Model):
     def __str__(self):
         return self.name
 
+    def set_dates(self, data):
+        self.date_onset = datetime.datetime.strptime(
+            data['date_onset'], '%Y-%m-%d'
+        )
+        self.date_diagnosis = datetime.datetime.strptime(
+            data['date_diagnosis'], '%Y-%m-%d'
+        )
+
 
 class Medication(models.Model):
     doctor = models.ForeignKey(User)
@@ -98,8 +108,8 @@ class Insurance(models.Model):
         return self.payer_name
 
 
-class Allergies(models.Model):
-    description = models.CharField(max_length=200, blank=True)
+class Allergy(models.Model):
+    patient = models.ForeignKey(Patient)
     notes = models.TextField(blank=True)
     reaction = models.CharField(max_length=200, blank=True)
     status = models.CharField(max_length=200, blank=True)

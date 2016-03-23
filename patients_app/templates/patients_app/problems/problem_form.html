@@ -2,6 +2,7 @@
 {% block content %}
 {% load staticfiles %}
 
+<h1>Problem</h1>
 <form id="problem-form" action="{% url 'patients_app:problem_index' %}" method="{{ method }}" data-problem="{{ problem.id }}">
 
   {% csrf_token %}

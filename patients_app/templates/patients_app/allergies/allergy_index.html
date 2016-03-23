@@ -1,0 +1,19 @@
+{% extends 'patients_app/base.html' %}
+{% block content %}
+
+<div id="clinical-table" class="bold">
+  Allergies
+</div>
+<a href="{% url 'patients_app:allergy_new' %}">
+  <button type="button" class="btn" name="button">Add new allergy</button>
+</a>
+
+<div id="clinical-table-head" class="table-content bold">
+  <div class="clinical-col">Reaction</div>
+  <div class="clinical-col status-col ">Status</div>
+</div>
+<div id="clinical-list" class="table-content">
+  {% include 'patients_app/allergies/allergy_list.html' %}
+</div>
+
+{% endblock %}
