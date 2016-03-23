@@ -8,11 +8,9 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
   </head>
   <body>
-    <div id="nav">
-      {% if request.user.doctor.current_patient_id %}
-        {% include 'patients_app/include/_nav.html' %}
-      {% endif %}
-    </div>
+    {% if request.user.doctor.current_patient_id %}
+      {% include 'patients_app/include/_nav.html' %}
+    {% endif %}
     <div id="main">
       {% if messages %}
         <ul class="messages">

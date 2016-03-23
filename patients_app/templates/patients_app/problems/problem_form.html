@@ -1,0 +1,39 @@
+{% extends 'patients_app/base.html' %}
+{% block content %}
+
+<h1>{{ problem.name }}</h1>
+<p>
+  Description: {{ problem.description }}
+</p>
+<form id="problem-form" action="" method="{{ method }}" data-problem="{{ problem.id }}">
+
+  {% csrf_token %}
+  <div id="problem-status">
+    <label>Status:
+      <input class="patient-input" type="text" name="status" value="{{ problem.status }}">
+    </label><br>
+  </div>
+
+  <div id="problem-dates">
+    <label>Date of onset:
+      <input type="date" name="date_onset" value="{{ onset_date }}">
+    </label><br>
+    <label>Date of diagnosis:
+      <input type="date" name="date_diagnosis" value="{{ diagnosis_date }}">
+    </label><br>
+  </div>
+
+  <div id="problem-notes">
+    <label>
+      <div class="">
+        Additional notes:
+      </div>
+      <textarea name="notes" rows="8" cols="40">{{ problem.notes }}</textarea>
+    </label>
+
+  </div>
+
+  <button id="save-problem-btn" class="btn" type="submit" name="button">Save</button>
+</form>
+
+{% endblock %}

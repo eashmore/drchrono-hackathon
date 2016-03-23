@@ -3,16 +3,17 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout, authenticate
 from django.views import generic
 from django.contrib import messages
-from django.http import HttpResponse
+from django.http import HttpResponse, QueryDict
 from django.contrib.auth.models import User
 
 import string
 import random
 import requests
+import datetime
 
 from models import Doctor, Patient, Problem, Medication, Allergies
 from utils import get_drchrono_user
-from forms import PatientForm
+from forms import PatientForm, ProblemForm
 from drchrono_patients.settings import CLIENT_DATA
 
 
@@ -90,6 +91,26 @@ def problems_view(request):
         'problems': problems
     })
 
+def problem_view(request, **kwargs):
+    problem = get_object_or_404(Problem, pk=kwargs['pk'])
+    if problem.date_onset:
+        onset_date = problem.date_onset.isoformat()
+    else:
+        onset_date = datetime.date.today()
+
+    if problem.date_diagnosis:
+        diagnosis_date = problem.date_diagnosis.isoformat()
+    else:
+        diagnosis_date = datetime.date.today()
+
+    return render(request, 'patients_app/problems/problem_form.html', {
+        'problem': problem,
+        'onset_date': onset_date,
+        'diagnosis_date': diagnosis_date,
+        'method': 'PATCH',
+        'action': 'problem_view'
+    })
+
 
 class PatientView(generic.DetailView):
     model = Patient
@@ -112,6 +133,40 @@ class PatientView(generic.DetailView):
 
             return redirect('patients_app:patient_edit')
 
+
+class Problem_Index_View(generic.DetailView):
+    model = Problem
+    form_class = ProblemForm
+
+    def post(self, request, **kwargs):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            problem = form.save()
+            problemJSON = serializers.serialize("json", [problem])
+            return HttpResponse(problemJSON, content_type='application/json')
+
+        return HttpResponse(status=500)
+
+
+class ProblemView(generic.DetailView):
+    model = Problem
+    form_class = ProblemForm
+
+    def patch(self, request, **kwargs):
+        problem = get_object_or_404(Problem, pk=kwargs['pk'])
+        data = QueryDict(request.body)
+        form = self.form_class(data, instance=problem)
+        if form.is_valid():
+            problem = form.save(commit=False)
+            problem.date_onset = datetime.datetime.strptime(
+                data['date_onset'], '%Y-%m-%d')
+            problem.date_diagnosis = datetime.datetime.strptime(
+                data['date_diagnosis'], '%Y-%m-%d')
+            problem.save()
+            problemJSON = serializers.serialize("json", [problem])
+            return HttpResponse(problemJSON, content_type='application/json')
+
+        return HttpResponse(status=500)
 
 # class DoctorView(generic.DetailView):
 #     model = Doctor

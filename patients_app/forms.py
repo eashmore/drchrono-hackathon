@@ -13,7 +13,7 @@ class ProblemForm(forms.ModelForm):
 
     class Meta:
         model = Problem
-        exclude = ['patient']
+        fields = ['status', 'notes']
 
 class MedicationForm(forms.ModelForm):
 

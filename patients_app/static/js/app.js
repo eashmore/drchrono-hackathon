@@ -1,51 +1,45 @@
-function listenForPatientUpdate() {
-  $('#update-patient-btn').click(updatePatient);
+function listenForProblemUpdate() {
+  $('#save-problem-btn').click(handleProblem);
 }
 
-function updatePatient(e) {
+function handleProblem(e) {
   e.preventDefault();
   var saveButton = e.currentTarget;
   saveButton.disabled = true;
-  var $form = $('#patient-update-form');
-  var token = getToken($form.data('user'), $form.data('patient'));
+  var $form = $('#problem-form');
+  if ($form.attr("method") === 'PATCH') {
+    updateProblem($form, saveButton);
+  } else {
+    createProblem($form, saveButton);
+  }
 }
 
-function getToken(user_id, patient_id) {
+function updateProblem($form, button) {
+  data = $form.serialize();
+  problemId = $form.data('problem');
   $.ajax({
-    url: '/api/doctor/' + user_id + '/',
-    type: 'GET',
-    dataType: 'json',
-    success: function(data) {
-      var token = data.fields.token;
-      // updateLocalPatient(token, $form);
-      updateDrchornoPatient(token, patient_id);
+    url: '/api/problem/' + problemId + '/',
+    type: 'PATCH',
+    data: data,
+    beforeSend: function(xhr) {
+      xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+    },
+    success: function() {
+      button.disabled = false;
     }
   });
 }
 
-function updateDrchornoPatient(token, patient_id) {
+function createProblem($form, button) {
+  data = $form.serialize();
   $.ajax({
-    // xhrFields: {
-    //   withCredentials: true
-    // },
-    // crossSite: true,
-    url: 'https://drchrono.com/api/' + patient_id + '/',
-    type: 'PATCH',
-    contentType: 'application/json',
-    // headers: {'Authorization': 'Bearer ' + token,
-    // 'Access-Control-Allow-Origin': 'https://drchrono.com/'},
-    // headers: {'Access-Control-Allow-Origin': '*',
-    //   'Access-Control-Allow-Methods': 'PATCH',
-      // 'Content-Type': 'application/json'},
-    beforeSend: function(xhr) {
-      xhr.setRequestHeader('Authorization', 'Bearer ' + token);
-    //   xhr.setRequestHeader('Access-Control-Allow-Origin', '*');
-    //   xhr.setRequestHeader('Content-Type', 'application/json');
-    //   xhr.setRequestHeader('Access-Control-Allow-Methods', 'PATCH');
-    },
-    success: function(data) {
-      debugger;
-    }
+    url: '/api/problems/',
+    type: 'POST',
+    data: data,
+    header: {"X-CSRFToken": getCookie('csrftoken')},
+    // success: function() {
+    //   saveButton.disabled = false;
+    // }
   });
 }
 
@@ -67,5 +61,5 @@ function getCookie(name) {
 }
 
 (function() {
-  // listenForPatientUpdate();
+  listenForProblemUpdate();
 })();

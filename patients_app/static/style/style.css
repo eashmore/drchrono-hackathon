@@ -46,16 +46,6 @@ body {
 
 /*clinical lists*/
 
-#search-bar {
-  width: 300px;
-  height: 20px;
-  font-size: 14px;
-  margin-bottom: 3px;
-  border-radius: 3px;
-  border: 1px solid #ccc;
-  padding: 3px 10px;
-}
-
 #clinical-table {
   padding-top: 5px;
   border-radius: 3px;
@@ -96,6 +86,10 @@ body {
 .clinical-col {
   display:inline-block;
   word-wrap: break-word;
+}
+
+.status-col {
+  float: right;
 }
 
 /*nav*/
