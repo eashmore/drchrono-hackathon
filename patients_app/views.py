@@ -82,6 +82,14 @@ def patient_logout(request):
     doctor.save()
     return redirect('patients_app:home')
 
+def problems_view(request):
+    patient = get_object_or_404(Patient,
+        pk=request.user.doctor.current_patient_id)
+    problems = patient.problem_set.all()
+    return render(request, 'patients_app/problems/index.html', {
+        'problems': problems
+    })
+
 
 class PatientView(generic.DetailView):
     model = Patient

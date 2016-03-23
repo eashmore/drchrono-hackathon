@@ -1,0 +1,17 @@
+{% extends 'patients_app/base.html' %}
+{% block content %}
+
+<div id="clinical-table" class="bold">
+  PROBLEMS
+</div>
+<input id="search-bar" type="text" name="search-query" value=""
+  placeholder="Search problems by name"
+>
+
+<div id="clinical-table-head" class="table-content bold">
+  <div class="clinical-col">Name</div>
+</div>
+<div id="clinical-list" class="table-content">
+  {% include 'patients_app/problems/list.html' %}
+</div>
+{% endblock %}

@@ -12,6 +12,8 @@ urlpatterns = [
     url(r'^$', login_required(views.home_view), name='home'),
     url(r'^patient/$', login_required(views.patient_view), name='patient_edit'),
     url(r'^patient/logout$', login_required(views.patient_logout), name='patient_logout'),
+    url(r'^patient/problems$', login_required(views.problems_view), name='problem_list'),
+
 
     url(r'^patient/(?P<pk>[0-9]+)/$', login_required(views.PatientView.as_view()),
         name='patient'),

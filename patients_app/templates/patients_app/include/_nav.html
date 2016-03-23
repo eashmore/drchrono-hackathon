@@ -1,27 +1,27 @@
 {% load staticfiles %}
 <div id="nav-left">
   <div id="nav-patients" class="nav-link nav-link-left">
-    <a href="#">
+    <a href="{% url 'patients_app:patient_edit' %}">
       <div class="nav-class-text">
         My Information
       </div>
     </a>
   </div><div id="nav-problems" class="nav-link nav-link-left">
-    <a href="#">
+    <a href="{% url 'patients_app:problem_list'%}">
       <div class="nav-class-text">
         Problems
-      </div>
-    </a>
-  </div><div id="nav-meds" class="nav-link nav-link-left">
-    <a href="#">
-      <div class="nav-class-text">
-        Medication
       </div>
     </a>
   </div><div id="nav-allergies" class="nav-link nav-link-left">
     <a href="#">
       <div class="nav-class-text">
         Allergies
+      </div>
+    </a>
+  </div><div id="nav-meds" class="nav-link nav-link-left">
+    <a href="#">
+      <div class="nav-class-text">
+        Medication
       </div>
     </a>
   </div>
