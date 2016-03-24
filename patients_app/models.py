@@ -8,6 +8,7 @@ import random
 
 from utils import str_to_date
 
+
 class Doctor(models.Model):
     user = models.OneToOneField(User, primary_key=True)
     token = models.CharField(max_length=200)
@@ -112,7 +113,7 @@ class Medication(models.Model):
         return self.name
 
     def set_additional_attrs(self, request):
-        self.doctor = request.doctor
+        self.doctor = request.user
         self.set_patient(request.user.doctor.current_patient_id)
         self.set_dates(request.POST)
 

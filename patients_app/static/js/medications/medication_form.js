@@ -19,10 +19,10 @@ function setMedicationStatus() {
 }
 
 function handleMedication(e) {
+  $('#save-screen').removeClass('display-none');
   var $form = $('#medication-form');
   if ($form.attr("method") === 'PATCH') {
     e.preventDefault();
-    $('#save-screen').removeClass('display-none');
     var saveButton = e.currentTarget;
     saveButton.disabled = true;
     updateMedication($form, saveButton);

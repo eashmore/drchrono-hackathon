@@ -19,10 +19,10 @@ function setProblemStatus() {
 }
 
 function handleProblem(e) {
+  $('#save-screen').removeClass('display-none');
   var $form = $('#problem-form');
   if ($form.attr("method") === 'PATCH') {
     e.preventDefault();
-    $('#save-screen').removeClass('display-none');
     var saveButton = e.currentTarget;
     saveButton.disabled = true;
     updateProblem($form, saveButton);

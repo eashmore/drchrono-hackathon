@@ -19,10 +19,10 @@ function setAllergyStatus() {
 }
 
 function handleAllergy(e) {
+  $('#save-screen').removeClass('display-none');
   var $form = $('#allergy-form');
   if ($form.attr("method") === 'PATCH') {
     e.preventDefault();
-    $('#save-screen').removeClass('display-none');
     var saveButton = e.currentTarget;
     saveButton.disabled = true;
     updateAllergy($form, saveButton);

@@ -11,8 +11,9 @@ import requests
 import datetime
 
 from models import Patient, Problem, Medication, Allergy
-from utils import (get_drchrono_user, send_message, send_update_message,
-                   send_create_mail, date_to_str, num_to_str)
+from utils import (send_message, send_update_message, send_create_mail,
+                   date_to_str, num_to_str)
+from api_helper import get_drchrono_user
 from forms import PatientForm, ProblemForm, AllergyForm, MedicationForm
 from drchrono_patients.settings import CLIENT_DATA
 
@@ -23,7 +24,7 @@ def login_view(request):
         'redirect_url': CLIENT_DATA['redirect_url'],
     }
 
-    return render(request, 'patients_app/login.html', context)
+    return render(request, 'patients_app/sessions/login.html', context)
 
 
 def oauth_view(request):
@@ -31,11 +32,11 @@ def oauth_view(request):
         if 'error' in request.GET:
             return redirect('patients_app:login_error')
 
-        user = User.objects.get(username='eashmore')
-        # user = get_drchrono_user(request.GET)
+        # user = User.objects.get(username='eashmore')
+        user = get_drchrono_user(request.GET)
         auth_user = authenticate(
-            # username=user.username,
-            username='eashmore',
+            username=user.username,
+            # username='eashmore',
             password=user.doctor.set_random_password()
         )
         login(request, auth_user)
@@ -48,7 +49,7 @@ def logout_view(request):
 
 
 def login_error_view(request):
-    return render(request, 'patients_app/login_error.html')
+    return render(request, 'patients_app/sessions/login_error.html')
 
 
 def home_view(request):
