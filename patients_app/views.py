@@ -10,7 +10,7 @@ from django.contrib.auth.models import User
 import requests
 import datetime
 
-from models import Patient, Problem, Medication, Allergy
+from models import Doctor, Patient, Problem, Medication, Allergy
 from utils import (send_message, send_update_message, send_create_mail,
                    date_to_str, num_to_str)
 from api_helper import get_drchrono_user
@@ -32,11 +32,9 @@ def oauth_view(request):
         if 'error' in request.GET:
             return redirect('patients_app:login_error')
 
-        # user = User.objects.get(username='eashmore')
         user = get_drchrono_user(request.GET)
         auth_user = authenticate(
             username=user.username,
-            # username='eashmore',
             password=user.doctor.set_random_password()
         )
         login(request, auth_user)
@@ -118,22 +116,12 @@ def problems_view(request):
 
 def problem_edit_view(request, **kwargs):
     problem = get_object_or_404(Problem, pk=kwargs['pk'])
-    onset_date = date_to_str(problem.date_onset)
-    diagnosis_date = date_to_str(problem.date_diagnosis)
     return render(request, 'patients_app/problems/problem_form.html', {
         'problem': problem,
-        'onset_date': onset_date,
-        'diagnosis_date': diagnosis_date,
+        'onset_date': date_to_str(problem.date_onset),
+        'diagnosis_date': date_to_str(problem.date_diagnosis),
         'method': 'PATCH',
     })
-
-
-# def add_problem_view(request):
-#     return render(request, 'patients_app/problems/problem_form.html', {
-#         'onset_date': datetime.date.today().isoformat(),
-#         'diagnosis_date': datetime.date.today().isoformat(),
-#         'method': 'POST',
-#     })
 
 
 def add_problem_view(request):
@@ -176,20 +164,14 @@ def medications_view(request):
 
 def medication_edit_view(request, **kwargs):
     medication = get_object_or_404(Medication, pk=kwargs['pk'])
-    date_prescribed = date_to_str(medication.date_prescribed)
-    date_started_taking = date_to_str(medication.date_started_taking)
-    date_stopped_taking = date_to_str(medication.date_stopped_taking)
-    dispense_quantity = num_to_str(medication.dispense_quantity)
-    dosage_quantity = num_to_str(medication.dosage_quantity)
-    number_refills = num_to_str(medication.number_refills)
     return render(request, 'patients_app/medications/med_form.html', {
         'medication': medication,
-        'date_prescribed': date_prescribed,
-        'date_started_taking': date_started_taking,
-        'dispense_quantity': dispense_quantity,
-        'date_stopped_taking,': date_stopped_taking,
-        'dosage_quantity': dosage_quantity,
-        'number_refills': number_refills,
+        'date_prescribed': date_to_str(medication.date_prescribed),
+        'date_started_taking': date_to_str(medication.date_started_taking),
+        'date_stopped_taking,': date_to_str(medication.date_stopped_taking),
+        'dispense_quantity': num_to_str(medication.dispense_quantity),
+        'dosage_quantity': num_to_str(medication.dosage_quantity),
+        'number_refills': num_to_str(medication.number_refills),
         'method': 'PATCH',
     })
 
@@ -233,7 +215,7 @@ class Problem_Index_View(generic.ListView):
     model = Problem
     form_class = ProblemForm
 
-    def post(self, request, **kwargs):
+    def post(self, request):
         form = self.form_class(request.POST)
         if form.is_valid():
             problem = form.save(commit=False)
@@ -283,7 +265,7 @@ class Allergy_Index_View(generic.ListView):
     model = Allergy
     form_class = AllergyForm
 
-    def post(self, request, **kwargs):
+    def post(self, request):
         form = self.form_class(request.POST)
         if form.is_valid():
             allergy = form.save(commit=False)
@@ -328,7 +310,7 @@ class Medication_Index_View(generic.ListView):
     model = Medication
     form_class = MedicationForm
 
-    def post(self, request, **kwargs):
+    def post(self, request):
         form = self.form_class(request.POST)
         if form.is_valid():
             medication = form.save(commit=False)
@@ -372,11 +354,10 @@ class MedicationView(generic.DetailView):
         return HttpResponse(status=500)
 
 
-# class DoctorView(generic.DetailView):
-#     model = Doctor
-#
-#     def get(self, request, **kwargs):
-#         doctor = get_object_or_404(User, pk=kwargs['pk']).doctor
-#         doctorJSON = serializers.serialize("json", [doctor])
-#         doctorJSON = doctorJSON[1:len(doctorJSON) - 1]
-#         return HttpResponse(doctorJSON, content_type='application/json')
+class DoctorView(generic.DetailView):
+    model = Doctor
+
+    def get(self, request, **kwargs):
+        doctor = get_object_or_404(User, pk=kwargs['pk']).doctor
+        doctorJSON = serializers.serialize("json", [doctor])
+        return HttpResponse(doctorJSON, content_type='application/json')

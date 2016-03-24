@@ -1,9 +1,10 @@
 from django.contrib.auth.models import User
 
 import requests
+import datetime
 
 from drchrono_patients.settings import CLIENT_DATA
-from models import Doctor, Patient, Problem, Medication, Allergy
+from models import Doctor, Patient, Problem, Medication, Allergy, Appointment
 
 
 # Access drchrono API
@@ -88,7 +89,6 @@ def save_patient(patient_data, user):
     kwargs['doctor'] = user
     kwargs['id'] = patient_data['id']
     patient = Patient(**kwargs)
-
     patient.save()
     return patient
 
@@ -113,7 +113,7 @@ def get_patient_data(patient, access_token, user):
     # appointment = get_paginated_data(appointment_endpoint, access_token)
     # save_appointment(appointment, patient)
 
-    # insurances = get_drchrono_data('insurances', header)
+    # insurances = get_paginated_data('insurances', access_token)
     # save_insurances(insurances, patient)
 
 
@@ -202,6 +202,7 @@ def get_drchrono_data(endpoint, header):
     response.raise_for_status()
     data = response.json()
     return data
+
 
 def get_paginated_data(endpoint, access_token):
     url = 'https://drchrono.com/api/%s' % endpoint

@@ -2,7 +2,6 @@ function listenForAllergyUpdate() {
   if ($('#allergy-form').attr('method') === 'PATCH') {
     setAllergyStatus();
   }
-
   $('#save-allergy-btn').click(handleAllergy);
 }
 

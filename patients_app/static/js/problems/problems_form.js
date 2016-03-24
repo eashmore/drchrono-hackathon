@@ -2,7 +2,6 @@ function listenForProblemUpdate() {
   if ($('#problem-form').attr('method') === 'PATCH') {
     setProblemStatus();
   }
-
   $('#save-problem-btn').click(handleProblem);
 }
 

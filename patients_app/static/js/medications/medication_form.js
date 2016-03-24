@@ -2,7 +2,6 @@ function listenForMedicationUpdate() {
   if ($('#medication-form').attr('method') === 'PATCH') {
     setMedicationStatus();
   }
-
   $('#save-meds-btn').click(handleMedication);
 }
 
@@ -30,12 +29,9 @@ function handleMedication(e) {
 }
 
 function updateMedication($form, button) {
-  $dawInput = getDaw();
-  // $form.append($dawInput);
-  $prnInput = getPrn();
-  // $form.append($prnInput);
   data = $form.serialize();
-  data = data + $dawInput + $prnInput;
+  data += dawJson();
+  data += prnJson();
   medicationId = $form.data('medication');
   $.ajax({
     url: '/api/medication/' + medicationId + '/',
@@ -59,24 +55,18 @@ function updateMedication($form, button) {
 
 function getDaw() {
   var checked = $('.daw-checkbox').attr('checked');
-  var $input = $("<input/>").attr('name', 'daw');
   if (checked) {
     return '&daw=false';
-    // return $input.attr('value', false);
   }
   return '&daw=true';
-  // return $input.attr('value', true);
 }
 
 function getPrn(data) {
   var checked = $('.prn-checkbox').attr('checked');
-  var $input = $("<input/>").attr('name', 'prn');
   if (checked) {
     return '&prn=false';
-    // return $input.attr('value', true);
   }
   return '&prn=true';
-  // return $input.attr('value', false);
 }
 
 function setActiveNav() {
