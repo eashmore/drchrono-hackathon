@@ -214,7 +214,7 @@ class PatientView(generic.DetailView):
             return redirect('patients_app:patient_edit')
 
 
-class Problem_Index_View(generic.DetailView):
+class Problem_Index_View(generic.ListView):
     model = Problem
     form_class = ProblemForm
 
@@ -269,7 +269,7 @@ class ProblemView(generic.DetailView):
         return HttpResponse(status=500)
 
 
-class Allergy_Index_View(generic.DetailView):
+class Allergy_Index_View(generic.ListView):
     model = Allergy
     form_class = AllergyForm
 
@@ -320,7 +320,7 @@ class AllergyView(generic.DetailView):
         return HttpResponse(status=500)
 
 
-class Medication_Index_View(generic.DetailView):
+class Medication_Index_View(generic.ListView):
     model = Medication
     form_class = MedicationForm
 
@@ -333,6 +333,7 @@ class Medication_Index_View(generic.DetailView):
                 Patient, pk=request.user.doctor.current_patient_id
             )
             medication.patient = patient
+            medication.doctor = request.user
             medication.save()
             send_update_message(request.user.email, patient, medication)
             messages.success(request, 'Save Successful')
@@ -360,6 +361,7 @@ class MedicationView(generic.DetailView):
         medication = get_object_or_404(Medication, pk=kwargs['pk'])
         old_data = model_to_dict(medication)
         data = QueryDict(request.body)
+
         form = self.form_class(data, instance=medication)
         if form.is_valid():
             medication = form.save(commit=False)

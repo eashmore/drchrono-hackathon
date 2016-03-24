@@ -98,15 +98,18 @@ class Medication(models.Model):
         return self.name
 
     def set_dates(self, data):
-        self.date_prescribed = datetime.datetime.strptime(
-            data['date_prescribed'], '%Y-%m-%d'
-        )
-        self.date_started_taking = datetime.datetime.strptime(
-            data['date_started_taking'], '%Y-%m-%d'
-        )
-        self.date_stopped_taking = datetime.datetime.strptime(
-            data['date_stopped_taking'], '%Y-%m-%d'
-        )
+        if hasattr(data, 'date_prescribed'):
+            self.date_prescribed = datetime.datetime.strptime(
+                data['date_prescribed'], '%Y-%m-%d'
+            )
+        if hasattr(data, 'date_started_taking'):
+            self.date_started_taking = datetime.datetime.strptime(
+                data['date_started_taking'], '%Y-%m-%d'
+            )
+        if hasattr(data, 'date_stopped_taking'):
+            self.date_stopped_taking = datetime.datetime.strptime(
+                data['date_stopped_taking'], '%Y-%m-%d'
+            )
 
 
 class Insurance(models.Model):
