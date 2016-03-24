@@ -5,15 +5,14 @@ from django.views import generic
 from django.contrib import messages
 from django.http import HttpResponse, QueryDict
 from django.forms.models import model_to_dict
+from django.contrib.auth.models import User
 
-import string
-import random
 import requests
 import datetime
 
 from models import Patient, Problem, Medication, Allergy
 from utils import (get_drchrono_user, send_message, send_update_message,
-                   get_date_str, send_create_mail)
+                   send_create_mail, date_to_str, num_to_str)
 from forms import PatientForm, ProblemForm, AllergyForm, MedicationForm
 from drchrono_patients.settings import CLIENT_DATA
 
@@ -32,21 +31,15 @@ def oauth_view(request):
         if 'error' in request.GET:
             return redirect('patients_app:login_error')
 
-        user = get_drchrono_user(request.GET)
+        user = User.objects.get(username='eashmore')
+        # user = get_drchrono_user(request.GET)
         auth_user = authenticate(
-            username=user.username,
-            password=set_random_password(user)
+            # username=user.username,
+            username='eashmore',
+            password=user.doctor.set_random_password()
         )
         login(request, auth_user)
         return redirect('patients_app:home')
-
-
-def set_random_password(user):
-    all_chars = string.letters + string.digits + string.punctuation
-    password = ''.join((random.choice(all_chars)) for x in range(20))
-    user.set_password(password)
-    user.save()
-    return password
 
 
 def logout_view(request):
@@ -61,19 +54,14 @@ def login_error_view(request):
 def home_view(request):
     if request.method == 'POST':
         patients = Patient.objects.all()
-
-        patient = patients.filter(
-            last_name=request.POST['last_name'],
-            first_name=request.POST['first_name'],
-            social_security_number__endswith=request.POST['ssn']
-        )
-        if patient.exists():
+        patient = find_patient(patients, request.POST)
+        if patient == None:
+            messages.error(request, 'Patient was not found.')
+        else:
             doctor = request.user.doctor
-            doctor.current_patient_id = patient.first().id
+            doctor.current_patient_id = patient.id
             doctor.save()
             return redirect('patients_app:patient_edit')
-        else:
-            messages.error(request, 'Patient was not found.')
 
     doctor = request.user.doctor
     doctor.current_patient_id = None
@@ -81,11 +69,20 @@ def home_view(request):
     return render(request, 'patients_app/index.html')
 
 
-def patient_view(request):
-    patient = get_object_or_404(
-        Patient, pk=request.user.doctor.current_patient_id
+def find_patient(patients, data):
+    patient = patients.filter(
+        last_name=data['last_name'],
+        first_name=data['first_name'],
+        social_security_number__endswith=data['ssn']
     )
+    if patient.exists():
+        return patient.first()
 
+    return None
+
+
+def patient_view(request):
+    patient = Patient.objects.get(pk=request.user.doctor.current_patient_id)
     return render(request, 'patients_app/patient.html', {'patient': patient})
 
 
@@ -97,9 +94,7 @@ def patient_logout(request):
 
 
 def message_view(request):
-    patient = get_object_or_404(
-        Patient, pk=request.user.doctor.current_patient_id
-    )
+    patient = Patient.objects.get(pk=request.user.doctor.current_patient_id)
     if (request.method == "POST"):
         doctor_email = request.user.email
         send_message(doctor_email, request.POST['body'], patient)
@@ -113,9 +108,7 @@ def message_view(request):
 
 
 def problems_view(request):
-    patient = get_object_or_404(
-        Patient, pk=request.user.doctor.current_patient_id
-    )
+    patient = Patient.objects.get(pk=request.user.doctor.current_patient_id)
     problems = patient.problem_set.all()
     return render(request, 'patients_app/problems/problem_index.html', {
         'problems': problems
@@ -124,8 +117,8 @@ def problems_view(request):
 
 def problem_edit_view(request, **kwargs):
     problem = get_object_or_404(Problem, pk=kwargs['pk'])
-    onset_date = get_date_str(problem.date_onset)
-    diagnosis_date = get_date_str(problem.date_diagnosis)
+    onset_date = date_to_str(problem.date_onset)
+    diagnosis_date = date_to_str(problem.date_diagnosis)
     return render(request, 'patients_app/problems/problem_form.html', {
         'problem': problem,
         'onset_date': onset_date,
@@ -150,11 +143,8 @@ def add_problem_view(request):
     })
 
 
-
 def allergies_view(request):
-    patient = get_object_or_404(
-        Patient, pk=request.user.doctor.current_patient_id
-    )
+    patient = Patient.objects.get(pk=request.user.doctor.current_patient_id)
     allergies = patient.allergy_set.all()
     return render(request, 'patients_app/allergies/allergy_index.html', {
         'allergies': allergies
@@ -176,9 +166,7 @@ def add_allergy_view(request):
 
 
 def medications_view(request):
-    patient = get_object_or_404(
-        Patient, pk=request.user.doctor.current_patient_id
-    )
+    patient = Patient.objects.get(pk=request.user.doctor.current_patient_id)
     medications = patient.medication_set.all()
     return render(request, 'patients_app/medications/med_index.html', {
         'medications': medications
@@ -187,24 +175,12 @@ def medications_view(request):
 
 def medication_edit_view(request, **kwargs):
     medication = get_object_or_404(Medication, pk=kwargs['pk'])
-    date_prescribed = get_date_str(medication.date_prescribed)
-    date_started_taking = get_date_str(medication.date_started_taking)
-    date_stopped_taking = get_date_str(medication.date_stopped_taking)
-    if medication.dispense_quantity == None:
-        dispense_quantity = ''
-    else:
-        dispense_quantity = medication.dispense_quantity
-
-    if medication.dosage_quantity == None:
-        dosage_quantity = ''
-    else:
-        dosage_quantity = medication.dosage_quantity
-
-    if medication.number_refills == None:
-        number_refills = ''
-    else:
-        number_refills = medication.number_refills
-
+    date_prescribed = date_to_str(medication.date_prescribed)
+    date_started_taking = date_to_str(medication.date_started_taking)
+    date_stopped_taking = date_to_str(medication.date_stopped_taking)
+    dispense_quantity = num_to_str(medication.dispense_quantity)
+    dosage_quantity = num_to_str(medication.dosage_quantity)
+    number_refills = num_to_str(medication.number_refills)
     return render(request, 'patients_app/medications/med_form.html', {
         'medication': medication,
         'date_prescribed': date_prescribed,
@@ -235,18 +211,21 @@ class PatientView(generic.DetailView):
             form = self.form_class(request.POST, instance=patient)
             if form.is_valid():
                 form.save()
-                url = 'https://drchrono.com/api/patients/%s' % kwargs['pk']
-                token = request.user.doctor.token
-                header = {'Authorization': 'Bearer %s' % token}
-                response = requests.patch(
-                    url=url, data=request.POST, headers=header
-                )
-                response.raise_for_status()
+                self.post_to_drchrono_api(request, kwargs['pk'])
                 messages.success(request, 'Save Successful')
             else:
                 messages.success(request, 'Save Failed')
 
             return redirect('patients_app:patient_edit')
+
+    def post_to_drchrono_api(self, request, patient_id):
+        url = 'https://drchrono.com/api/patients/%s' % patient_id
+        token = request.user.doctor.token
+        header = {'Authorization': 'Bearer %s' % token}
+        response = requests.patch(
+            url=url, data=request.POST, headers=header
+        )
+        response.raise_for_status()
 
 
 class Problem_Index_View(generic.ListView):
@@ -257,13 +236,9 @@ class Problem_Index_View(generic.ListView):
         form = self.form_class(request.POST)
         if form.is_valid():
             problem = form.save(commit=False)
-            problem.set_dates(request.POST)
-            patient = get_object_or_404(
-                Patient, pk=request.user.doctor.current_patient_id
-            )
-            problem.patient = patient
+            problem.set_additional_attrs(request)
             problem.save()
-            send_create_mail(request.user.email, patient, problem)
+            send_create_mail(request.user.email, problem)
             messages.success(request, 'Save Successful')
             return redirect('patients_app:problem_edit', problem.id)
         else:
@@ -294,10 +269,9 @@ class ProblemView(generic.DetailView):
             problem = form.save(commit=False)
             problem.set_dates(data)
             problem.save()
-            patient = get_object_or_404(
-                Patient, pk=request.user.doctor.current_patient_id
+            send_update_message(
+                request.user.email, problem, old_data
             )
-            send_update_message(request.user.email, patient, problem, old_data)
             problemJSON = serializers.serialize("json", [problem])
             return HttpResponse(problemJSON, content_type='application/json')
 
@@ -312,12 +286,9 @@ class Allergy_Index_View(generic.ListView):
         form = self.form_class(request.POST)
         if form.is_valid():
             allergy = form.save(commit=False)
-            patient = get_object_or_404(
-                Patient, pk=request.user.doctor.current_patient_id
-            )
-            allergy.patient = patient
+            allergy.set_patient(request.user.doctor.current_patient_id)
             allergy.save()
-            send_create_mail(request.user.email, patient, allergy)
+            send_create_mail(request.user.email, allergy)
             messages.success(request, 'Save Successful')
             return redirect('patients_app:allergy_edit', allergy.id)
         else:
@@ -345,10 +316,7 @@ class AllergyView(generic.DetailView):
         if form.is_valid():
             allegy = form.save(commit=False)
             allegy.save()
-            patient = get_object_or_404(
-                Patient, pk=request.user.doctor.current_patient_id
-            )
-            send_update_message(request.user.email, patient, allegy, old_data)
+            send_update_message(request.user.email, allegy, old_data)
             allegyJSON = serializers.serialize("json", [allegy])
             return HttpResponse(allegyJSON, content_type='application/json')
 
@@ -363,14 +331,9 @@ class Medication_Index_View(generic.ListView):
         form = self.form_class(request.POST)
         if form.is_valid():
             medication = form.save(commit=False)
-            medication.set_dates(request.POST)
-            patient = get_object_or_404(
-                Patient, pk=request.user.doctor.current_patient_id
-            )
-            medication.patient = patient
-            medication.doctor = request.user
+            medication.set_additional_attrs(request)
             medication.save()
-            send_create_mail(request.user.email, patient, medication)
+            send_create_mail(request.user.email, medication)
             messages.success(request, 'Save Successful')
             return redirect('patients_app:medication_edit', medication.id)
         else:
@@ -400,14 +363,8 @@ class MedicationView(generic.DetailView):
         if form.is_valid():
             medication = form.save(commit=False)
             medication.set_dates(data)
-            # medication.set_floats(data)
             medication.save()
-            patient = get_object_or_404(
-                Patient, pk=request.user.doctor.current_patient_id
-            )
-            send_update_message(
-                request.user.email, patient, medication, old_data
-            )
+            send_update_message(request.user.email, medication, old_data)
             medicationJSON = serializers.serialize("json", [medication])
             return HttpResponse(medicationJSON, content_type='application/json')
 

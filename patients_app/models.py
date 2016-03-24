@@ -3,13 +3,23 @@ from __future__ import unicode_literals
 from django.db import models
 from django.contrib.auth.models import User
 
-import datetime
+import string
+import random
 
+from utils import str_to_date
 
 class Doctor(models.Model):
     user = models.OneToOneField(User, primary_key=True)
     token = models.CharField(max_length=200)
     current_patient_id = models.IntegerField(null=True, blank=True)
+
+    def set_random_password(self):
+        user = self.user
+        all_chars = string.letters + string.digits + string.punctuation
+        password = ''.join((random.choice(all_chars)) for x in range(20))
+        user.set_password(password)
+        user.save()
+        return password
 
 
 class Patient(models.Model):
@@ -68,20 +78,17 @@ class Problem(models.Model):
     def __str__(self):
         return self.name
 
-    def set_dates(self, data):
-        if data['date_onset']:
-            self.date_onset = datetime.datetime.strptime(
-                data['date_onset'], '%Y-%m-%d'
-            )
-        else:
-            self.date_onset = None
+    def set_additional_attrs(self, request):
+        self.set_patient(request.user.doctor.current_patient_id)
+        self.set_dates(request.POST)
 
-        if data['date_diagnosis']:
-            self.date_diagnosis = datetime.datetime.strptime(
-                data['date_diagnosis'], '%Y-%m-%d'
-            )
-        else:
-            self.date_diagnosis = None
+    def set_patient(self, patient_id):
+        patient = Patient.objects.get(pk=patient_id)
+        self.patient = patient
+
+    def set_dates(self, data):
+        self.date_onset = str_to_date(data['date_onset'])
+        self.date_diagnosis = str_to_date(data['date_diagnosis'])
 
 
 class Medication(models.Model):
@@ -93,8 +100,8 @@ class Medication(models.Model):
     date_prescribed = models.DateField(null=True, blank=True)
     date_started_taking = models.DateField(null=True, blank=True)
     date_stopped_taking = models.DateField(null=True, blank=True)
-    dispense_quantity = models.FloatField(blank=True, default=0.0)
-    dosage_quantity = models.FloatField(blank=True, default=0.0)
+    dispense_quantity = models.FloatField(null=True, blank=True)
+    dosage_quantity = models.FloatField(null=True, blank=True)
     notes = models.TextField(blank=True)
     frequency = models.CharField(max_length=200, blank=True)
     number_refills = models.IntegerField(blank=True, null=True)
@@ -104,38 +111,33 @@ class Medication(models.Model):
     def __str__(self):
         return self.name
 
+    def set_additional_attrs(self, request):
+        self.doctor = request.doctor
+        self.set_patient(request.user.doctor.current_patient_id)
+        self.set_dates(request.POST)
+
+    def set_patient(self, patient_id):
+        patient = Patient.objects.get(pk=patient_id)
+        self.patient = patient
+
     def set_dates(self, data):
-        if data['date_prescribed']:
-            self.date_prescribed = datetime.datetime.strptime(
-                data['date_prescribed'], '%Y-%m-%d'
-            )
-        else:
-            self.date_prescribed = None
+        self.date_prescribed = str_to_date(data['date_prescribed'])
+        self.date_started_taking = str_to_date(data['date_started_taking'])
+        self.date_stopped_taking = str_to_date(data['date_stopped_taking'])
 
-        if data['date_started_taking']:
-            self.date_started_taking = datetime.datetime.strptime(
-                data['date_started_taking'], '%Y-%m-%d'
-            )
-        else:
-            self.date_started_taking = None
 
-        if data['date_stopped_taking']:
-            self.date_stopped_taking = datetime.datetime.strptime(
-                data['date_stopped_taking'], '%Y-%m-%d'
-            )
-        else:
-            self.date_stopped_taking = None
+class Allergy(models.Model):
+    patient = models.ForeignKey(Patient)
+    notes = models.TextField(blank=True)
+    reaction = models.CharField(max_length=200, blank=True)
+    status = models.CharField(max_length=200, blank=True)
 
-    def set_floats(self, data):
-        if data['dispense_quantity']:
-            self.dispense_quantity = data['dispense_quantity']
-        else:
-            self.date_stopped_taking = 0.0
+    def __str__(self):
+        return self.reaction
 
-        if data['dosage_quantity']:
-            self.dosage_quantity = data['dosage_quantity']
-        else:
-            self.dosage_quantity = 0.0
+    def set_patient(self, patient_id):
+        patient = Patient.objects.get(pk=patient_id)
+        self.patient = patient
 
 
 class Insurance(models.Model):
@@ -148,11 +150,13 @@ class Insurance(models.Model):
         return self.payer_name
 
 
-class Allergy(models.Model):
+class Appointment(models.Model):
     patient = models.ForeignKey(Patient)
-    notes = models.TextField(blank=True)
-    reaction = models.CharField(max_length=200, blank=True)
+    scheduled_time = models.CharField(max_length=200)
     status = models.CharField(max_length=200, blank=True)
 
     def __str__(self):
-        return self.description
+        return self.scheduled_time
+
+    class Meta:
+        ordering = ['scheduled_time']
