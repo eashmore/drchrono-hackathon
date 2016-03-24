@@ -2,7 +2,7 @@
 {% block content %}
 {% load staticfiles %}
 
-<h1>Medication</h1>
+<h2>Medication</h2>
 <form id="medication-form" action="{% url 'patients_app:medication_index' %}"
   method="{{ method }}" data-medication="{{ medication.id }}"
 >
@@ -10,7 +10,7 @@
   {% csrf_token %}
   <div id="medication-info">
     <label>Name of medication:
-      <input class="basic-input" type="text" name="name" value="{{ medication.name }}">
+      <input class="input-lg" type="text" name="name" value="{{ medication.name }}">
     </label>
     <br>
     <label>Substitute okay?
@@ -20,8 +20,8 @@
         <input class="daw-checkbox" type="checkbox">
       {% endif %}
     </label>
-
-    <label>Take as directed?
+    <br>
+    <label>Take only as needed?
       {% if medication.prn == True %}
         <input class="prn-checkbox" type="checkbox" checked>
       {% else %}
@@ -29,57 +29,54 @@
       {% endif %}
     </label>
 
-    <label>Status:
-      <select name="status">
-        <option id="medication-active" value="active">active</option>
-        <option id="medication-inactive" value="inactive">inactive</option>
-      </select>
-    </label><br>
+    <div class="form-title">Current status</div>
+    <select name="status">
+      <option id="medication-active" value="active">active</option>
+      <option id="medication-inactive" value="inactive">inactive</option>
+    </select>
   </div>
 
   <div id="medication-dates">
+    <div class="form-title">Dates</div>
     <label>Date Prescribed:
-      <input type="date" name="date_onset" value="{{ date_prescribed }}">
+      <input class="input-med" type="date" name="date_onset" value="{{ date_prescribed }}">
     </label><br>
     <label>Date stated taking:
-      <input type="date" name="date_started_taking" value="{{ date_started_taking }}">
+      <input class="input-med" type="date" name="date_started_taking" value="{{ date_started_taking }}">
     </label><br>
     <label>Date stopped taking:
-      <input type="date" name="date_stopped_taking" value="{{ date_stopped_taking }}">
+      <input class="input-med" type="date" name="date_stopped_taking" value="{{ date_stopped_taking }}">
     </label><br>
   </div>
 
   <div id="medication-dosage">
+    <div class="form-title">Dosage</div>
     <label>Quantity given:
-      <input class="num-input" type="text" name="dispense_quantity"
+      <input class="input-sm" type="text" name="dispense_quantity"
         value="{{ medication.dispense_quantity }}"
       >
     </label>
     <label>Dosage:
-      <input class="num-input" type="text" name="dosage_quantity"
+      <input class="input-sm" type="text" name="dosage_quantity"
         value="{{ medication.dosage_quantity }}"
       >
     </label>
-    <label>Frequency:
-      <input class="num-input" type="text" name="frequency"
+    <br>
+    <label>Frequency taken:
+      <input class="input-sm" type="text" name="frequency"
         value="{{ medication.frequency }}"
       >
     </label>
     <label>Number of refills:
-      <input class="num-input" type="text" name="number_refills"
+      <input class="input-sm" type="text" name="number_refills"
         value="{{ medication.number_refills }}"
       >
     </label>
   </div>
 
   <div id="medication-notes">
-    <label>
-      <div class="">
-        Additional notes:
-      </div>
-      <textarea class="text-area" name="notes" rows="8" cols="40">{{ medication.notes }}</textarea>
-    </label>
-
+    <div class="form-title">Additional notes</div>
+    <textarea class="text-area" name="notes" rows="8" cols="40">{{ medication.notes }}</textarea>
   </div>
 
   <button id="save-meds-btn" class="btn" type="submit" name="button">Save</button>

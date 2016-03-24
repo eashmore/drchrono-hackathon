@@ -2,30 +2,22 @@
 {% block content %}
 {% load staticfiles %}
 
-<h1>Allergy</h1>
+<h2>Allergy</h2>
 <form id="allergy-form" action="{% url 'patients_app:allergy_index' %}" method="{{ method }}" data-allergy="{{ allergy.id }}">
-
   {% csrf_token %}
   <div id="allergy-info">
-    <label>Allergic reaction:
-      <input class="basic-input" type="text" name="reaction" value="{{ allergy.reaction }}">
-    </label>
-    <label>Status:
-      <select name="status">
-        <option id="allergy-active" value="active">active</option>
-        <option id="allergy-inactive" value="inactive">inactive</option>
-      </select>
-    </label><br>
+    <div class="form-title">Reaction</div>
+    <input class="input-med" type="text" name="reaction" value="{{ allergy.reaction }}">
+    <div class="form-title">Current status</div>
+    <select name="status">
+      <option id="allergy-active" value="active">active</option>
+      <option id="allergy-inactive" value="inactive">inactive</option>
+    </select>
   </div>
 
   <div id="allergy-notes">
-    <label>
-      <div class="">
-        Additional notes:
-      </div>
-      <textarea class="text-area" name="notes" rows="8" cols="40">{{ allergy.notes }}</textarea>
-    </label>
-
+    <div class="form-title">Additional notes</div>
+    <textarea class="text-area" name="notes" rows="8" cols="40">{{ allergy.notes }}</textarea>
   </div>
 
   <button id="save-allergy-btn" class="btn" type="submit" name="button">Save</button>

@@ -7,14 +7,13 @@ body {
 #main {
   margin: auto;
   margin-top: 75px;
-  height: 75vh;
-  width: 85vw;
+  min-height: 80vh;
+  width: 80vw;
   background-color: #fff;
-  padding: 20px;
-  /*border: 1px solid #ccc;*/
+  padding: 20px 50px;
   border-radius: 3px;
   box-shadow: 0px 0px 3px #808080;
-  overflow-y: scroll;
+  margin-bottom: 25px;
 }
 
 .btn {
@@ -47,7 +46,7 @@ body {
   padding: 10px;
 }
 
-.basic-input, .num-input {
+.input-med, .input-sm, .input-lg {
   margin-bottom: 3px;
   border-radius: 3px;
   border: 1px solid #ccc;
@@ -56,8 +55,12 @@ body {
   font-size: 14px;
 }
 
-.num-input {
+.input-sm {
   width: 50px;
+}
+
+.input-lg {
+  width: 250px;
 }
 
 #patient-form {
@@ -83,8 +86,6 @@ body {
 }
 
 #clinical-list {
-  overflow-y: scroll;
-  max-height: 60%;
   border-top: 1px solid #D3D3D3;
   border-radius: 0px 0px 3px 3px;
 }
@@ -93,7 +94,6 @@ body {
   margin-top: 10px;
   padding-top: 4px;
   padding-bottom: 4px;
-  padding-right: 15px;
   border-radius: 3px 3px 0px 0px;
 }
 
@@ -118,12 +118,12 @@ body {
   margin-right: 10px;
 }
 
-#success-save {
-  background-color: #74E82E;
+#success-save, .success{
+  background-color: #01AFEE;
   border: 1px solid #faebcc;
 }
 
-#error-save {
+#error-save, .error {
   background-color: #A21515;
   border: 1px solid #790F0F;
   color: #fff;
@@ -134,7 +134,7 @@ body {
   left: 0;
   right: 0;
   text-align: center;
-  top: 35px;
+  top: 79px;
   padding: 5px 0px;
   font-size: 24px;
   opacity: 0.9;
@@ -168,6 +168,11 @@ body {
   z-index: 1000;
   left: 0;
   right: 0;
+}
+
+.form-title {
+  font-weight: 600;
+  margin-top: 20px;
 }
 
 /*nav*/
@@ -233,6 +238,7 @@ body {
 #nav-checkout {
   background-color: #42931F;
   opacity: 0.8;
+  width: 300px;
 }
 
 #nav-checkout>a {

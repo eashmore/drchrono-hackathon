@@ -2,21 +2,21 @@
 {% block content %}
 {% load staticfiles %}
 
-<h1>Problem</h1>
+<h2>Problem</h2>
 <form id="problem-form" action="{% url 'patients_app:problem_index' %}" method="{{ method }}" data-problem="{{ problem.id }}">
 
   {% csrf_token %}
   <div id="problem-info">
-    <label>Name of problem:
-      <input class="basic-input" type="text" name="name" value="{{ problem.name }}">
+    <label>Problem name:
+      <input class="input-lg" type="text" name="name" value="{{ problem.name }}">
     </label>
     <label>
-      <div class="">
-        Description:
+      <div class="form-title">
+        Description
       </div>
       <textarea class="text-area" name="description" rows="8" cols="40">{{ problem.description }}</textarea>
     </label><br>
-    <label>Status:
+    <div class="form-title">Current status</div>
       <select name="status">
         <option id="problem-active" value="active">active</option>
         <option id="problem-inactive" value="inactive">inactive</option>
@@ -26,19 +26,18 @@
   </div>
 
   <div id="problem-dates">
+    <div class="form-title">Dates</div>
     <label>Date of onset:
-      <input type="date" name="date_onset" value="{{ onset_date }}">
+      <input class="input-med" type="date" name="date_onset" value="{{ onset_date }}">
     </label><br>
     <label>Date of diagnosis:
-      <input type="date" name="date_diagnosis" value="{{ diagnosis_date }}">
+      <input class="input-med" type="date" name="date_diagnosis" value="{{ diagnosis_date }}">
     </label><br>
   </div>
 
   <div id="problem-notes">
     <label>
-      <div class="">
-        Additional notes:
-      </div>
+      <div class="form-title">Additional notes</div>
       <textarea class="text-area" name="notes" rows="8" cols="40">{{ problem.notes }}</textarea>
     </label>
 

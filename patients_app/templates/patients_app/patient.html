@@ -2,90 +2,95 @@
 {% block content %}
 {% load staticfiles %}
 
-<h1>{{ patient.first_name }} {{ patient.last_name }}</h1>
+<h2>{{ patient.first_name }} {{ patient.last_name }}</h2>
 <form id="patient-update-form" action="{% url 'patients_app:patient' patient.id %}" method="POST">
   <input type="hidden" name="_method" value="PATCH">
 
   {% csrf_token %}
   <div id="patient-address">
+    <div class="form-title">Address</div>
     <label>Address:
-      <input class="basic-input" type="text" name="address" value="{{ patient.address }}">
+      <input class="input-lg" type="text" name="address" value="{{ patient.address }}">
     </label>
     <label>City:
-      <input class="basic-input" type="text" name="city" value="{{ patient.city }}">
+      <input class="input-med" type="text" name="city" value="{{ patient.city }}">
     </label>
+    <br>
     <label>State:
-      <input class="basic-input" type="text" name="state" value="{{ patient.state }}">
+      <input class="input-sm" type="text" name="state" value="{{ patient.state }}">
     </label>
     <label>Zip Code
-      <input class="basic-input" type="text" name="zip_code" value="{{ patient.zip_code }}">
+      <input class="input-sm" type="text" name="zip_code" value="{{ patient.zip_code }}">
     </label>
   </div>
 
   <div id="patient-contact">
+    <div class="form-title">Contact Information</div>
     <label>Email:
-      <input class="basic-input" type="text" name="email" value="{{ patient.email }}">
+      <input class="input-lg" type="text" name="email" value="{{ patient.email }}">
     </label>
     <label>Home Phone:
-      <input class="basic-input" type="text" name="home_phone" value="{{ patient.home_phone }}">
+      <input class="input-med" type="text" name="home_phone" value="{{ patient.home_phone }}">
     </label>
     <label>Cell Phone:
-      <input class="basic-input" type="text" name="cell_phone" value="{{ patient.cell_phone }}">
+      <input class="input-med" type="text" name="cell_phone" value="{{ patient.cell_phone }}">
     </label>
   </div>
 
   <div id="patient-primary">
-    <label>Primary Care Physician:
-      <input class="basic-input" type="text" name="primary_care_physician" value="{{ patient.primary_care_physician }}">
+    <div class="form-title">Primary Care Physician</div>
+    <label>Name:
+      <input class="input-lg" type="text" name="primary_care_physician" value="{{ patient.primary_care_physician }}">
     </label>
   </div>
 
-  <div id="patient-employer"> Employer Info
-    <br>
+  <div id="patient-employer">
+    <div class="form-title">Employer Info</div>
     <label>Employer Name:
-      <input class="basic-input" type="text" name="employer" value="{{ patient.employer }}">
+      <input class="input-lg" type="text" name="employer" value="{{ patient.employer }}">
     </label>
     <label>Address:
-      <input class="basic-input" type="text" name="employer_address" value="{{ patient.employer_address }}">
+      <input class="input-lg" type="text" name="employer_address" value="{{ patient.employer_address }}">
     </label>
     <label>City:
-      <input class="basic-input" type="text" name="employer_city" value="{{ patient.employer_city }}">
+      <input class="input-med" type="text" name="employer_city" value="{{ patient.employer_city }}">
     </label>
     <br>
     <label>State:
-      <input class="basic-input" type="text" name="employer_state" value="{{ patient.employer_state }}">
+      <input class="input-sm" type="text" name="employer_state" value="{{ patient.employer_state }}">
     </label>
     <label>Zip Code:
-      <input class="basic-input" type="text" name="employer_zip_code" value="{{ patient.employer_zip_code }}">
+      <input class="input-sm" type="text" name="employer_zip_code" value="{{ patient.employer_zip_code }}">
     </label>
   </div>
 
-  <div id="patient-emergency">Emergency Contact Info
-    <br>
+  <div id="patient-emergency">
+    <div class="form-title">Emergency Contact Info</div>
     <label>Emergency Contact Name
-      <input class="basic-input" type="text" name="emergency_contact_name" value="{{ patient.emergency_contact_name }}">
+      <input class="input-lg" type="text" name="emergency_contact_name" value="{{ patient.emergency_contact_name }}">
     </label>
     <label>Relation
-      <input class="basic-input" type="text" name="emergency_contact_relation" value="{{ patient.emergency_contact_relation }}">
+      <input class="input-med" type="text" name="emergency_contact_relation" value="{{ patient.emergency_contact_relation }}">
     </label>
     <label>Phone Number
-      <input class="basic-input" type="text" name="emergency_contact_phone" value="{{ patient.emergency_contact_phone }}">
+      <input class="input-med" type="text" name="emergency_contact_phone" value="{{ patient.emergency_contact_phone }}">
     </label>
   </div>
 
-  <div id="patient-reponsible">Responsible Party
-    <br>
+  <div id="patient-reponsible">
+    <div class="form-title">Responsible Party</div>
     <label>Name:
-      <input class="basic-input" type="text" name="responsible_party_name" value="{{ patient.responsible_party_name }}">
+      <input class="input-lg" type="text" name="responsible_party_name" value="{{ patient.responsible_party_name }}">
     </label>
     <label>Relation:
-      <input class="basic-input" type="text" name="responsible_party_relation" value="{{ patient.responsible_party_relation }}">
+      <input class="input-med" type="text" name="responsible_party_relation" value="{{ patient.responsible_party_relation }}">
     </label>
+    <br>
     <label>Phone Number:
-      <input class="basic-input" type="text" name="responsible_party_phone" value="{{ patient.responsible_party_phone }}">
+      <input class="input-med" type="text" name="responsible_party_phone" value="{{ patient.responsible_party_phone }}">
     </label>
     <label>Email:
-      <input class="basic-input" type="text" name="responsible_party_email" value="{{ patient.responsible_party_email }}">
+      <input class="input-lg" type="text" name="responsible_party_email" value="{{ patient.responsible_party_email }}">
     </label>
   </div>
 
