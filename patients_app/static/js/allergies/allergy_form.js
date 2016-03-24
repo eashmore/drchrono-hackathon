@@ -1,42 +1,39 @@
-function listenForMedicationUpdate() {
-  if ($('#medication-form').attr('method') === 'PATCH') {
-    setMedicationStatus();
+function listenForAllergyUpdate() {
+  if ($('#allergy-form').attr('method') === 'PATCH') {
+    setAllergyStatus();
   }
 
-  $('#save-meds-btn').click(handleMedication);
+  $('#save-allergy-btn').click(handleAllergy);
 }
 
-function setMedicationStatus() {
-    medicationId = $('#medication-form').data('medication');
+function setAllergyStatus() {
+    allergyId = $('#allergy-form').data('allergy');
     $.ajax({
-      url: '/api/medication/' + medicationId + '/',
+      url: '/api/allergy/' + allergyId + '/',
       type: 'GET',
       success: function(data) {
         status = data[0].fields.status;
-        $('#medication-' + status).attr('selected', true);
+        $('#allergy-' + status).attr('selected', true);
       }
     });
 }
 
-function handleMedication(e) {
-  var $form = $('#medication-form');
+function handleAllergy(e) {
+  var $form = $('#allergy-form');
   if ($form.attr("method") === 'PATCH') {
     e.preventDefault();
     $('#save-screen').removeClass('display-none');
     var saveButton = e.currentTarget;
     saveButton.disabled = true;
-    updateMedication($form, saveButton);
+    updateAllergy($form, saveButton);
   }
 }
 
-function updateMedication($form, button) {
+function updateAllergy($form, button) {
   data = $form.serialize();
-  daw = getDaw();
-  prn = getPrn();
-  data = data + daw + prn;
-  medicationId = $form.data('medication');
+  allergyId = $form.data('allergy');
   $.ajax({
-    url: '/api/medication/' + medicationId + '/',
+    url: '/api/allergy/' + allergyId + '/',
     type: 'PATCH',
     data: data,
     beforeSend: function(xhr) {
@@ -55,20 +52,8 @@ function updateMedication($form, button) {
   });
 }
 
-function getDaw() {
-  var checked = $('.daw-checkbox').attr('checked');
-  if (checked) {
-    return '&daw=false';
-  }
-  return '&daw=true';
-}
-
-function getPrn() {
-  var checked = $('.prn-checkbox').attr('checked');
-  if (checked) {
-    return '&prn=false';
-  }
-  return '&prn=true';
+function setActiveNav() {
+  $('#nav-allergies').addClass('active');
 }
 
 function getCookie(name) {
@@ -89,5 +74,6 @@ function getCookie(name) {
 }
 
 (function() {
-  listenForMedicationUpdate();
+  listenForAllergyUpdate();
+  setActiveNav();
 })();

@@ -1,5 +1,6 @@
 {% extends 'patients_app/base.html' %}
 {% block content %}
+{% load staticfiles %}
 
 <h1>{{ patient.first_name }} {{ patient.last_name }}</h1>
 <form id="patient-update-form" action="{% url 'patients_app:patient' patient.id %}" method="POST">
@@ -91,4 +92,5 @@
   <button id="update-patient-btn" class="btn" type="submit" name="button">Update</button>
 </form>
 
+<script defer type="text/javascript" src="{% static 'js/patient.js' %}"></script>
 {% endblock %}

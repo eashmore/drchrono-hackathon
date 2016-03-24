@@ -1,11 +1,12 @@
 {% extends 'patients_app/base.html' %}
 {% block content %}
+{% load staticfiles %}
 
 <div id="clinical-table" class="bold">
   Problems
 </div>
 <a href="{% url 'patients_app:problem_new' %}">
-  <button type="button" class="btn" name="button">Add new problem</button>
+  <button id="new-btn" type="button" class="btn" name="button">Add new problem</button>
 </a>
 
 <div id="clinical-table-head" class="table-content bold">
@@ -15,4 +16,6 @@
 <div id="clinical-list" class="table-content">
   {% include 'patients_app/problems/problem_list.html' %}
 </div>
+
+<script defer type="text/javascript" src="{% static 'js/problems/problems.js' %}"></script>
 {% endblock %}

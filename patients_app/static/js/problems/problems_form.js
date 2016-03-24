@@ -52,6 +52,10 @@ function updateProblem($form, button) {
   });
 }
 
+function setActiveNav() {
+  $('#nav-problems').addClass('active');
+}
+
 function getCookie(name) {
     var cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -70,5 +74,6 @@ function getCookie(name) {
 }
 
 (function() {
+  setActiveNav();
   listenForProblemUpdate();
 })();

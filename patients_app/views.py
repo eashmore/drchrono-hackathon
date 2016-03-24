@@ -126,12 +126,21 @@ def problem_edit_view(request, **kwargs):
     })
 
 
+# def add_problem_view(request):
+#     return render(request, 'patients_app/problems/problem_form.html', {
+#         'onset_date': datetime.date.today().isoformat(),
+#         'diagnosis_date': datetime.date.today().isoformat(),
+#         'method': 'POST',
+#     })
+
+
 def add_problem_view(request):
     return render(request, 'patients_app/problems/problem_form.html', {
         'onset_date': datetime.date.today().isoformat(),
         'diagnosis_date': datetime.date.today().isoformat(),
         'method': 'POST',
     })
+
 
 
 def allergies_view(request):

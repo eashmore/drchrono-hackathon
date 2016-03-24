@@ -1,39 +1,42 @@
-function listenForAllergyUpdate() {
-  if ($('#allergy-form').attr('method') === 'PATCH') {
-    setAllergyStatus();
+function listenForMedicationUpdate() {
+  if ($('#medication-form').attr('method') === 'PATCH') {
+    setMedicationStatus();
   }
 
-  $('#save-allergy-btn').click(handleAllergy);
+  $('#save-meds-btn').click(handleMedication);
 }
 
-function setAllergyStatus() {
-    allergyId = $('#allergy-form').data('allergy');
+function setMedicationStatus() {
+    medicationId = $('#medication-form').data('medication');
     $.ajax({
-      url: '/api/allergy/' + allergyId + '/',
+      url: '/api/medication/' + medicationId + '/',
       type: 'GET',
       success: function(data) {
         status = data[0].fields.status;
-        $('#allergy-' + status).attr('selected', true);
+        $('#medication-' + status).attr('selected', true);
       }
     });
 }
 
-function handleAllergy(e) {
-  var $form = $('#allergy-form');
+function handleMedication(e) {
+  var $form = $('#medication-form');
   if ($form.attr("method") === 'PATCH') {
     e.preventDefault();
     $('#save-screen').removeClass('display-none');
     var saveButton = e.currentTarget;
     saveButton.disabled = true;
-    updateAllergy($form, saveButton);
+    updateMedication($form, saveButton);
   }
 }
 
-function updateAllergy($form, button) {
+function updateMedication($form, button) {
   data = $form.serialize();
-  allergyId = $form.data('allergy');
+  daw = getDaw();
+  prn = getPrn();
+  data = data + daw + prn;
+  medicationId = $form.data('medication');
   $.ajax({
-    url: '/api/allergy/' + allergyId + '/',
+    url: '/api/medication/' + medicationId + '/',
     type: 'PATCH',
     data: data,
     beforeSend: function(xhr) {
@@ -50,6 +53,26 @@ function updateAllergy($form, button) {
       $('#save-screen').addClass('display-none');
     }
   });
+}
+
+function getDaw() {
+  var checked = $('.daw-checkbox').attr('checked');
+  if (checked) {
+    return '&daw=false';
+  }
+  return '&daw=true';
+}
+
+function getPrn() {
+  var checked = $('.prn-checkbox').attr('checked');
+  if (checked) {
+    return '&prn=false';
+  }
+  return '&prn=true';
+}
+
+function setActiveNav() {
+  $('#nav-meds').addClass('active');
 }
 
 function getCookie(name) {
@@ -70,5 +93,6 @@ function getCookie(name) {
 }
 
 (function() {
-  listenForAllergyUpdate();
+  setActiveNav();
+  listenForMedicationUpdate();
 })();

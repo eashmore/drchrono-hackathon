@@ -1,5 +1,6 @@
 {% extends 'patients_app/base.html' %}
 {% block content %}
+{% load staticfiles %}
 
 <div id="clinical-table" class="bold">
   Medications
@@ -16,4 +17,5 @@
   {% include 'patients_app/medications/med_list.html' %}
 </div>
 
+<script defer type="text/javascript" src="{% static 'js/medications/medications.js' %}"></script>
 {% endblock %}
