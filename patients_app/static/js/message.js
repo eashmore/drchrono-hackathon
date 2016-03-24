@@ -1,7 +1,9 @@
-function setActiveNav() {
-  $('#nav-message').addClass('active');
+function showLoadingScreen() {
+  $('#loading-text').html('Sending');
+  $('#save-screen').removeClass('display-none');
 }
 
 (function() {
-  setActiveNav();
+  $('#nav-message').addClass('active');
+  $('#message-btn').click(showLoadingScreen);
 })();

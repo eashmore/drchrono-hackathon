@@ -1,7 +1,12 @@
 {% extends 'patients_app/base.html' %}
 {% block content %}
+{% load staticfiles %}
+
 <h1>Doctor Sign In</h1>
 <a href="https://drchrono.com/o/authorize/?redirect_uri={{redirect_url}}&response_type=code&client_id={{client_id}}&scope=patients:read%20patients:write%20user:read%20clinical:read%20calendar:read%20calendar:write">
-  <button class="btn" type="button" name="button">Sign in with drchrono</button>
+  <button id="doctor-signin-btn" class="btn" type="button" name="button">Sign in with drchrono</button>
 </a>
+{% include 'patients_app/include/_loading_screen.html' %}
+
+<script defer type="text/javascript" src="{% static 'js/login.js' %}"></script>
 {% endblock %}

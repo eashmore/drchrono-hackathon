@@ -8,8 +8,9 @@
   {% csrf_token %}
   <textarea class="text-area" name="body" rows="8" cols="40">{{ message }}</textarea>
   <br>
-  <button type="submit" class="btn" name="button">Send message</button>
+  <button id="message-btn" type="submit" class="btn" name="button">Send message</button>
 </form>
+{% include 'patients_app/include/_loading_screen.html' %}
 
 <script defer type="text/javascript" src="{% static 'js/message.js' %}"></script>
 {% endblock %}

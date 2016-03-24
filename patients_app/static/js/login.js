@@ -1,8 +1,8 @@
 function showLoadingScreen() {
+  $('#loading-text').html('Loading Patient Data');
   $('#save-screen').removeClass('display-none');
 }
 
 (function() {
-  $('#nav-patient').addClass('active');
-  $('#update-patient-btn').click(showLoadingScreen);
+  $('#doctor-signin-btn').click(showLoadingScreen);
 })();

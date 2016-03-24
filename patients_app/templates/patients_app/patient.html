@@ -96,6 +96,7 @@
 
   <button id="update-patient-btn" class="btn" type="submit" name="button">Update</button>
 </form>
+{% include 'patients_app/include/_loading_screen.html' %}
 
 <script defer type="text/javascript" src="{% static 'js/patient.js' %}"></script>
 {% endblock %}
