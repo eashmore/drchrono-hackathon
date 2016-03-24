@@ -1,15 +1,21 @@
 {% extends 'patients_app/base.html' %}
 {% block content %}
+{% load staticfiles %}
+
+<h1 class="text-center">Patient Sign In</h1>
 
 <form class="" action="{% url 'patients_app:home' %}" method="POST">
   {% csrf_token %}
-  <input type="text" name="first_name" value="" placeholder="Your first name">
-  <input type="text" name="last_name" value="" placeholder="Your last name">
-  <input type="text" name="ssn" value=""
-    placeholder="Last 4 digits of your SSN"
-  >
+  <div class="patient-signin">
+    <input class="input-lg input-signin" type="text" name="first_name" value="" placeholder="Your first name">
+    <input class="input-lg input-signin" type="text" name="last_name" value="" placeholder="Your last name">
+    <input class="input-lg input-signin" type="text" name="ssn" value=""
+      placeholder="Last 4 digits of your SSN"
+    >
+  </div>
 
-  <button class="btn" type="submit" name="button">To Profile</button>
+  <button id="signin-btn" class="btn" type="submit" name="button">Sign In</button>
 </form>
 
+<img id="drchrono-img" src="{% static 'images/drchrono-power.png' %}" alt="" />
 {% endblock %}

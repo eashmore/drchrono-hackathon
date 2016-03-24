@@ -1,0 +1,20 @@
+{% extends 'patients_app/base.html' %}
+{% block content %}
+
+<div class="center-text">
+  <h1>Oh no, something went wrong!</h1>
+  <p>
+    Don't panic, everything will be okay! You can always
+    <a href="{% url 'patients_app:login' %}">
+      return to the sign in page and try again.
+    </a>
+  </p>
+
+    <a href="{% url 'patients_app:login' %}">
+      <button class="btn" type="button" name="button">
+        <i class="fa fa-arrow-circle-left fa-lg"></i> Back to sign in page
+      </button>
+    </a>
+</div>
+
+{% endblock %}

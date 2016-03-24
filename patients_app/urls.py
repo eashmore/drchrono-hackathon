@@ -10,6 +10,8 @@ urlpatterns = [
     url(r'^accounts/oauth/$', views.oauth_view, name='oauth'),
     url(r'^accounts/logout/$', login_required(views.logout_view),
         name='logout'),
+    url(r'^accounts/error/$', views.login_error_view,
+        name='login_error'),
     url(r'^$', login_required(views.home_view), name='home'),
 
     url(r'^patient/$', login_required(views.patient_view),

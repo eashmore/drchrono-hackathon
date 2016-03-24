@@ -12,7 +12,8 @@ import requests
 import datetime
 
 from models import Patient, Problem, Medication, Allergy
-from utils import get_drchrono_user, send_message, send_update_message, get_date_str
+from utils import (get_drchrono_user, send_message, send_update_message,
+                   get_date_str, send_create_mail)
 from forms import PatientForm, ProblemForm, AllergyForm, MedicationForm
 from drchrono_patients.settings import CLIENT_DATA
 
@@ -28,8 +29,8 @@ def login_view(request):
 
 def oauth_view(request):
     if request.method == 'GET':
-            # if 'error' in request.GET:
-                # return redirect('patients_app:login_error')
+        if 'error' in request.GET:
+            return redirect('patients_app:login_error')
 
         user = get_drchrono_user(request.GET)
         auth_user = authenticate(
@@ -51,6 +52,10 @@ def set_random_password(user):
 def logout_view(request):
     logout(request)
     return redirect('patients_app:login')
+
+
+def login_error_view(request):
+    return render(request, 'patients_app/login_error.html')
 
 
 def home_view(request):
@@ -92,16 +97,19 @@ def patient_logout(request):
 
 
 def message_view(request):
+    patient = get_object_or_404(
+        Patient, pk=request.user.doctor.current_patient_id
+    )
     if (request.method == "POST"):
         doctor_email = request.user.email
-        patient = get_object_or_404(
-            Patient, pk=request.user.doctor.current_patient_id
-        )
         send_message(doctor_email, request.POST['body'], patient)
         messages.success(request, 'Message sent!')
         return redirect('patients_app:message')
 
-    return render(request, 'patients_app/message.html')
+    message = 'Hi Dr. {0}, \n\n\n\nBest Regards,\n{1} {2}'.format(
+        request.user.last_name, patient.first_name, patient.last_name
+    )
+    return render(request, 'patients_app/message.html', {'message': message})
 
 
 def problems_view(request):
@@ -237,7 +245,7 @@ class Problem_Index_View(generic.ListView):
             )
             problem.patient = patient
             problem.save()
-            send_update_message(request.user.email, patient, problem)
+            send_create_mail(request.user.email, patient, problem)
             messages.success(request, 'Save Successful')
             return redirect('patients_app:problem_edit', problem.id)
         else:
@@ -291,7 +299,7 @@ class Allergy_Index_View(generic.ListView):
             )
             allergy.patient = patient
             allergy.save()
-            send_update_message(request.user.email, patient, allergy)
+            send_create_mail(request.user.email, patient, allergy)
             messages.success(request, 'Save Successful')
             return redirect('patients_app:allergy_edit', allergy.id)
         else:
@@ -344,7 +352,7 @@ class Medication_Index_View(generic.ListView):
             medication.patient = patient
             medication.doctor = request.user
             medication.save()
-            send_update_message(request.user.email, patient, medication)
+            send_create_mail(request.user.email, patient, medication)
             messages.success(request, 'Save Successful')
             return redirect('patients_app:medication_edit', medication.id)
         else:
@@ -375,6 +383,7 @@ class MedicationView(generic.DetailView):
         if form.is_valid():
             medication = form.save(commit=False)
             medication.set_dates(data)
+            medication.set_floats(data)
             medication.save()
             patient = get_object_or_404(
                 Patient, pk=request.user.doctor.current_patient_id

@@ -1,46 +1,34 @@
 {% load staticfiles %}
 <div id="nav">
   <div id="nav-left">
-    <div id="nav-patient" class="nav-link nav-link-left">
-      <a href="{% url 'patients_app:patient_edit' %}">
-        <div class="nav-class-text">
-          <i class="fa fa-user fa-lg"></i> My Information
-        </div>
-      </a>
-    </div><div id="nav-problems" class="nav-link nav-link-left">
-      <a href="{% url 'patients_app:problem_list'%}">
-        <div class="nav-class-text">
-          Problems
-        </div>
-      </a>
-    </div><div id="nav-allergies" class="nav-link nav-link-left">
-      <a href="{% url 'patients_app:allergy_list'%}">
-        <div class="nav-class-text">
-          Allergies
-        </div>
-      </a>
-    </div><div id="nav-meds" class="nav-link nav-link-left">
-      <a href="{% url 'patients_app:medication_list'%}">
-        <div class="nav-class-text">
-          Medication
-        </div>
-      </a>
-    </div><div id="nav-message" class="nav-link nav-link-left">
-      <a href="{% url 'patients_app:message' %}">
-        <div class="nav-class-text">
-          Leave a message
-        </div>
-      </a>
-    </div>
+    <a class="nav-link" href="{% url 'patients_app:patient_edit' %}">
+      <div id="nav-patient" class="nav-tab nav-tab-left nav-class-text">
+        <i class="fa fa-user fa-lg"></i> My Information
+      </div>
+    </a><a class="nav-link" href="{% url 'patients_app:problem_list'%}">
+      <div id="nav-problems" class="nav-tab nav-tab-left nav-class-text">
+        Problems
+      </div>
+    </a><a class="nav-link" href="{% url 'patients_app:allergy_list'%}">
+      <div id="nav-allergies" class="nav-tab nav-tab-left nav-class-text">
+        Allergies
+      </div>
+    </a><a class="nav-link" href="{% url 'patients_app:medication_list'%}">
+      <div id="nav-meds" class="nav-tab nav-tab-left nav-class-text">
+        Medication
+      </div>
+    </a><a class="nav-link" href="{% url 'patients_app:message' %}">
+      <div id="nav-message" class="nav-tab nav-tab-left nav-class-text">
+        Leave a message
+      </div>
+    </a>
   </div>
 
   <div id="nav-right">
-    <div id="nav-checkout" class="nav-link nav-link-right">
-      <a href="{% url 'patients_app:patient_logout' %}">
-        <div class="nav-class-text">
-          <i class="fa fa-sign-out fa-lg"></i> Check in
-        </div>
-      </a>
-    </div>
+    <a class="nav-link" href="{% url 'patients_app:patient_logout' %}">
+      <div id="nav-checkout" class="nav-tab nav-tab-right nav-class-text">
+        <i class="fa fa-sign-out fa-lg"></i> Check in
+      </div>
+    </a>
   </div>
 </div>

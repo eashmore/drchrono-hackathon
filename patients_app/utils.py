@@ -23,29 +23,32 @@ def send_message(email, message, patient):
     send_mail(subject, message, EMAIL_HOST_USER, [email], fail_silently=False)
 
 
-def send_update_message(email, patient, instance, old_instance=False):
-    if old_instance:
-        subject = '{0} {1} had updated a new {2}'.format(
-            patient.first_name, patient.last_name, type(instance).__name__
-        )
-        message = ('The following updates have been applied to {0} id: {1} '
-                    'by {2} {3}:\n\n')
+def send_update_message(email, patient, instance, old_instance):
+    subject = '{0} {1} had updated a new {2}'.format(
+        patient.first_name, patient.last_name, type(instance).__name__
+    )
+    message = ('The following updates have been applied to {0} id: {1} '
+               'by {2} {3}:\n\n')
 
-        message = message.format(
-            type(instance).__name__,
-            instance.id,
-            patient.first_name,
-            patient.last_name
-        )
-        message += stringify_instance(instance, old_instance)
-    else:
-        subject = '{0} {1} has added a new {2}'.format(
-            patient.first_name, patient.last_name, type(instance).__name__
-        )
-        message = 'The following {0} has been added by {1} {2}:\n\n'.format(
-            type(instance).__name__, patient.first_name, patient.last_name
-        )
-        message += stringify_instance(instance)
+    message = message.format(
+        type(instance).__name__,
+        instance.id,
+        patient.first_name,
+        patient.last_name
+    )
+    message += stringify_instance(instance, old_instance)
+
+    send_mail(subject, message, EMAIL_HOST_USER, [email], fail_silently=False)
+
+
+def send_create_mail(email, patient, instance):
+    subject = '{0} {1} has added a new {2}'.format(
+        patient.first_name, patient.last_name, type(instance).__name__
+    )
+    message = 'The following {0} has been added by {1} {2}:\n\n'.format(
+        type(instance).__name__, patient.first_name, patient.last_name
+    )
+    message += stringify_instance(instance)
 
     send_mail(subject, message, EMAIL_HOST_USER, [email], fail_silently=False)
 

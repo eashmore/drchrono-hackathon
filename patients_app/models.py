@@ -69,12 +69,19 @@ class Problem(models.Model):
         return self.name
 
     def set_dates(self, data):
-        self.date_onset = datetime.datetime.strptime(
-            data['date_onset'], '%Y-%m-%d'
-        )
-        self.date_diagnosis = datetime.datetime.strptime(
-            data['date_diagnosis'], '%Y-%m-%d'
-        )
+        if data['date_onset']:
+            self.date_onset = datetime.datetime.strptime(
+                data['date_onset'], '%Y-%m-%d'
+            )
+        else:
+            self.date_onset = None
+
+        if data['date_diagnosis']:
+            self.date_diagnosis = datetime.datetime.strptime(
+                data['date_diagnosis'], '%Y-%m-%d'
+            )
+        else:
+            self.date_diagnosis = None
 
 
 class Medication(models.Model):
@@ -86,8 +93,8 @@ class Medication(models.Model):
     date_prescribed = models.DateField(null=True, blank=True)
     date_started_taking = models.DateField(null=True, blank=True)
     date_stopped_taking = models.DateField(null=True, blank=True)
-    dispense_quantity = models.FloatField(null=True, blank=True)
-    dosage_quantity = models.FloatField(null=True, blank=True)
+    dispense_quantity = models.FloatField(blank=True, default=0.0)
+    dosage_quantity = models.FloatField(blank=True, default=0.0)
     notes = models.TextField(blank=True)
     frequency = models.CharField(max_length=200, blank=True)
     number_refills = models.IntegerField(blank=True, null=True)
@@ -98,18 +105,37 @@ class Medication(models.Model):
         return self.name
 
     def set_dates(self, data):
-        if hasattr(data, 'date_prescribed'):
+        if data['date_prescribed']:
             self.date_prescribed = datetime.datetime.strptime(
                 data['date_prescribed'], '%Y-%m-%d'
             )
-        if hasattr(data, 'date_started_taking'):
+        else:
+            self.date_prescribed = None
+
+        if data['date_started_taking']:
             self.date_started_taking = datetime.datetime.strptime(
                 data['date_started_taking'], '%Y-%m-%d'
             )
-        if hasattr(data, 'date_stopped_taking'):
+        else:
+            self.date_started_taking = None
+
+        if data['date_stopped_taking']:
             self.date_stopped_taking = datetime.datetime.strptime(
                 data['date_stopped_taking'], '%Y-%m-%d'
             )
+        else:
+            self.date_stopped_taking = None
+
+    def set_floats(self, data):
+        if data['dispense_quantity']:
+            self.dispense_quantity = data['dispense_quantity']
+        else:
+            self.date_stopped_taking = 0.0
+
+        if data['dosage_quantity']:
+            self.dosage_quantity = data['dosage_quantity']
+        else:
+            self.dosage_quantity = 0.0
 
 
 class Insurance(models.Model):
