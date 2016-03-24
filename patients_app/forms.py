@@ -19,7 +19,7 @@ class MedicationForm(forms.ModelForm):
 
     class Meta:
         model = Medication
-        exclude = ['patient']
+        exclude = ['patient', 'doctor']
 
 class AllergyForm(forms.ModelForm):
 

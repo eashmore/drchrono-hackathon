@@ -4,7 +4,6 @@ from django.contrib.auth import login, logout, authenticate
 from django.views import generic
 from django.contrib import messages
 from django.http import HttpResponse, QueryDict
-from django.contrib.auth.models import User
 from django.forms.models import model_to_dict
 
 import string
@@ -12,9 +11,9 @@ import random
 import requests
 import datetime
 
-from models import Doctor, Patient, Problem, Medication, Allergy
-from utils import get_drchrono_user, send_message, send_update_message
-from forms import PatientForm, ProblemForm, AllergyForm
+from models import Patient, Problem, Medication, Allergy
+from utils import get_drchrono_user, send_message, send_update_message, get_date_str
+from forms import PatientForm, ProblemForm, AllergyForm, MedicationForm
 from drchrono_patients.settings import CLIENT_DATA
 
 
@@ -127,13 +126,6 @@ def problem_edit_view(request, **kwargs):
     })
 
 
-def get_date_str(date):
-    if date:
-        return date.isoformat()
-    else:
-        return datetime.date.today().isoformat()
-
-
 def add_problem_view(request):
     return render(request, 'patients_app/problems/problem_form.html', {
         'onset_date': datetime.date.today().isoformat(),
@@ -166,6 +158,38 @@ def add_allergy_view(request):
     })
 
 
+def medications_view(request):
+    patient = get_object_or_404(
+        Patient, pk=request.user.doctor.current_patient_id
+    )
+    medications = patient.medication_set.all()
+    return render(request, 'patients_app/medications/med_index.html', {
+        'medications': medications
+    })
+
+
+def medication_edit_view(request, **kwargs):
+    medication = get_object_or_404(Medication, pk=kwargs['pk'])
+    date_prescribed = get_date_str(medication.date_prescribed)
+    date_started_taking = get_date_str(medication.date_started_taking)
+    date_stopped_taking = get_date_str(medication.date_stopped_taking)
+    return render(request, 'patients_app/medications/med_form.html', {
+        'medication': medication,
+        'date_prescribed': date_prescribed,
+        'date_started_taking': date_started_taking,
+        'date_stopped_taking,': date_stopped_taking,
+        'method': 'PATCH',
+    })
+
+
+def add_medication_view(request):
+    return render(request, 'patients_app/medications/med_form.html', {
+        'date_prescribed': datetime.date.today().isoformat(),
+        'date_started_taking': datetime.date.today().isoformat(),
+        'method': 'POST',
+    })
+
+
 class PatientView(generic.DetailView):
     model = Patient
     form_class = PatientForm
@@ -179,7 +203,9 @@ class PatientView(generic.DetailView):
                 url = 'https://drchrono.com/api/patients/%s' % kwargs['pk']
                 token = request.user.doctor.token
                 header = {'Authorization': 'Bearer %s' % token}
-                response = requests.patch(url=url, data=request.POST, headers=header)
+                response = requests.patch(
+                    url=url, data=request.POST, headers=header
+                )
                 response.raise_for_status()
                 messages.success(request, 'Save Successful')
             else:
@@ -256,7 +282,7 @@ class Allergy_Index_View(generic.DetailView):
             )
             allergy.patient = patient
             allergy.save()
-            # send_update_message(request.user.email, patient, allergy)
+            send_update_message(request.user.email, patient, allergy)
             messages.success(request, 'Save Successful')
             return redirect('patients_app:allergy_edit', allergy.id)
         else:
@@ -287,11 +313,69 @@ class AllergyView(generic.DetailView):
             patient = get_object_or_404(
                 Patient, pk=request.user.doctor.current_patient_id
             )
-            # send_update_message(request.user.email, patient, allegy, old_data)
+            send_update_message(request.user.email, patient, allegy, old_data)
             allegyJSON = serializers.serialize("json", [allegy])
             return HttpResponse(allegyJSON, content_type='application/json')
 
         return HttpResponse(status=500)
+
+
+class Medication_Index_View(generic.DetailView):
+    model = Medication
+    form_class = MedicationForm
+
+    def post(self, request, **kwargs):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            medication = form.save(commit=False)
+            medication.set_dates(request.POST)
+            patient = get_object_or_404(
+                Patient, pk=request.user.doctor.current_patient_id
+            )
+            medication.patient = patient
+            medication.save()
+            send_update_message(request.user.email, patient, medication)
+            messages.success(request, 'Save Successful')
+            return redirect('patients_app:medication_edit', medication.id)
+        else:
+            messages.success(request, 'Save Failed')
+
+        return render(request, 'patients_app/medications/med_form.html', {
+            'date_prescribed': datetime.date.today().isoformat(),
+            'date_started_taking': datetime.date.today().isoformat(),
+            'method': 'POST',
+        })
+
+
+class MedicationView(generic.DetailView):
+    model = Medication
+    form_class = MedicationForm
+
+    def get(self, request, **kwargs):
+        medication = get_object_or_404(Medication, pk=kwargs['pk'])
+        medicationJSON = serializers.serialize("json", [medication])
+        return HttpResponse(medicationJSON, content_type='application/json')
+
+    def patch(self, request, **kwargs):
+        medication = get_object_or_404(Medication, pk=kwargs['pk'])
+        old_data = model_to_dict(medication)
+        data = QueryDict(request.body)
+        form = self.form_class(data, instance=medication)
+        if form.is_valid():
+            medication = form.save(commit=False)
+            medication.set_dates(data)
+            medication.save()
+            patient = get_object_or_404(
+                Patient, pk=request.user.doctor.current_patient_id
+            )
+            send_update_message(
+                request.user.email, patient, medication, old_data
+            )
+            medicationJSON = serializers.serialize("json", [medication])
+            return HttpResponse(medicationJSON, content_type='application/json')
+
+        return HttpResponse(status=500)
+
 
 # class DoctorView(generic.DetailView):
 #     model = Doctor

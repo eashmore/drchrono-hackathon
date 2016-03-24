@@ -2,10 +2,10 @@
 {% block content %}
 
 <div id="clinical-table" class="bold">
-  Problems
+  Medications
 </div>
-<a href="{% url 'patients_app:problem_new' %}">
-  <button type="button" class="btn" name="button">Add new problem</button>
+<a href="{% url 'patients_app:medication_new' %}">
+  <button type="button" class="btn" name="button">Add new medication</button>
 </a>
 
 <div id="clinical-table-head" class="table-content bold">
@@ -13,6 +13,7 @@
   <div class="clinical-col status-col ">Status</div>
 </div>
 <div id="clinical-list" class="table-content">
-  {% include 'patients_app/problems/problem_list.html' %}
+  {% include 'patients_app/medications/med_list.html' %}
 </div>
+
 {% endblock %}

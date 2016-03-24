@@ -1,0 +1,10 @@
+{% for med in medications %}
+  <div class="clinical-item" data-medication="{{ med.id }}">
+    <div class="clinical-col">
+      <a href="{% url 'patients_app:medication_edit' med.id %}">
+        {{ med.name }}
+      </a>
+    </div>
+    <div class="clinical-col status-col">{{ med.status }}</div>
+  </div>
+{% endfor %}

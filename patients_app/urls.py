@@ -35,6 +35,13 @@ urlpatterns = [
     url(r'^patient/allergies/new$', login_required(views.add_allergy_view),
         name='allergy_new'),
 
+    url(r'^patient/medications/$', login_required(views.medications_view),
+        name='medication_list'),
+    url(r'^patient/medication/(?P<pk>[0-9]+)/$',
+        login_required(views.medication_edit_view), name='medication_edit'),
+    url(r'^patient/medications/new$', login_required(views.add_medication_view),
+        name='medication_new'),
+
     url(r'^api/problems/$', login_required(views.Problem_Index_View.as_view()),
         name='problem_index'),
     url(r'^api/problem/(?P<pk>[0-9]+)/$',
@@ -43,6 +50,13 @@ urlpatterns = [
         name='allergy_index'),
     url(r'^api/allergy/(?P<pk>[0-9]+)/$',
         login_required(views.AllergyView.as_view()), name='allergy'),
+    url(
+        r'^api/medications/$',
+        login_required(views.Medication_Index_View.as_view()),
+        name='medication_index'
+    ),
+    url(r'^api/medication/(?P<pk>[0-9]+)/$',
+        login_required(views.MedicationView.as_view()), name='medication'),
 
     # url(r'^api/doctor/(?P<pk>[0-9]+)/$', login_required(views.DoctorView.as_view()),
     #     name='doctor'),

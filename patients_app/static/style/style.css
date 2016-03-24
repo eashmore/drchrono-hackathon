@@ -40,13 +40,17 @@ body {
   padding: 10px;
 }
 
-.basic-input {
+.basic-input, .num-input {
   margin-bottom: 3px;
   border-radius: 3px;
   border: 1px solid #ccc;
   padding: 3px 10px;
   margin: 5px;
   font-size: 14px;
+}
+
+.num-input {
+  width: 50px;
 }
 
 #patient-form {

@@ -1,5 +1,5 @@
 {% for problem in problems %}
-  <div class="clinical-item" data-problem="{{problem.id}}">
+  <div class="clinical-item" data-problem="{{ problem.id }}">
     <div class="clinical-col">
       <a href="{% url 'patients_app:problem_edit' problem.id %}">
         {{ problem.name }}

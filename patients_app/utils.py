@@ -5,10 +5,17 @@ from django.forms.models import model_to_dict
 import requests
 
 from drchrono_patients.settings import CLIENT_DATA, EMAIL_HOST_USER
-
 from models import Doctor, Patient, Problem, Medication, Insurance, Allergy
 
 
+def get_date_str(date):
+    if date:
+        return date.isoformat()
+    else:
+        return None
+
+
+# send message to doctor
 def send_message(email, message, patient):
     subject = 'A message from {0} {1}'.format(
         patient.first_name, patient.last_name

@@ -1,5 +1,5 @@
 {% for allergy in allergies %}
-  <div class="clinical-item" data-allergy="{{allergy.id}}">
+  <div class="clinical-item" data-allergy="{{ allergy.id }}">
     <div class="clinical-col">
       <a href="{% url 'patients_app:allergy_edit' allergy.id %}">
         {{ allergy.reaction }}
