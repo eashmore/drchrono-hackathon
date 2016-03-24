@@ -190,11 +190,29 @@ def medication_edit_view(request, **kwargs):
     date_prescribed = get_date_str(medication.date_prescribed)
     date_started_taking = get_date_str(medication.date_started_taking)
     date_stopped_taking = get_date_str(medication.date_stopped_taking)
+    if medication.dispense_quantity == None:
+        dispense_quantity = ''
+    else:
+        dispense_quantity = medication.dispense_quantity
+
+    if medication.dosage_quantity == None:
+        dosage_quantity = ''
+    else:
+        dosage_quantity = medication.dosage_quantity
+
+    if medication.number_refills == None:
+        number_refills = ''
+    else:
+        number_refills = medication.number_refills
+
     return render(request, 'patients_app/medications/med_form.html', {
         'medication': medication,
         'date_prescribed': date_prescribed,
         'date_started_taking': date_started_taking,
+        'dispense_quantity': dispense_quantity,
         'date_stopped_taking,': date_stopped_taking,
+        'dosage_quantity': dosage_quantity,
+        'number_refills': number_refills,
         'method': 'PATCH',
     })
 
@@ -378,12 +396,11 @@ class MedicationView(generic.DetailView):
         medication = get_object_or_404(Medication, pk=kwargs['pk'])
         old_data = model_to_dict(medication)
         data = QueryDict(request.body)
-
         form = self.form_class(data, instance=medication)
         if form.is_valid():
             medication = form.save(commit=False)
             medication.set_dates(data)
-            medication.set_floats(data)
+            # medication.set_floats(data)
             medication.save()
             patient = get_object_or_404(
                 Patient, pk=request.user.doctor.current_patient_id

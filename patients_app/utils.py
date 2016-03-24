@@ -5,7 +5,7 @@ from django.forms.models import model_to_dict
 import requests
 
 from drchrono_patients.settings import CLIENT_DATA, EMAIL_HOST_USER
-from models import Doctor, Patient, Problem, Medication, Insurance, Allergy
+from models import Doctor, Patient, Problem, Medication, Allergy
 
 
 def get_date_str(date):
@@ -149,14 +149,34 @@ def get_patients(user, access_token):
 
 
 def save_patient(patient_data, user):
-    patient_attrs = Patient.column_list()
-    kwargs = {}
-    for attr in patient_attrs:
-        kwargs[attr] = patient_data[attr]
-
-    kwargs['doctor'] = user
-    kwargs['id'] = patient_data['id']
-    patient = Patient(**kwargs)
+    patient = Patient(
+        id=patient_data['id'],
+        doctor=user,
+        first_name=patient_data['first_name'],
+        middle_name=patient_data['middle_name'],
+        last_name=patient_data['last_name'],
+        address=patient_data['address'],
+        email=patient_data['email'],
+        home_phone=patient_data['home_phone'],
+        cell_phone=patient_data['cell_phone'],
+        city=patient_data['city'],
+        zip_code=patient_data['zip_code'],
+        state=patient_data['state'],
+        emergency_contact_name=patient_data['emergency_contact_name'],
+        emergency_contact_phone=patient_data['emergency_contact_phone'],
+        emergency_contact_relation=patient_data['emergency_contact_relation'],
+        employer=patient_data['employer'],
+        employer_city=patient_data['employer_city'],
+        employer_state=patient_data['employer_state'],
+        employer_address=patient_data['employer_address'],
+        employer_zip_code=patient_data['employer_zip_code'],
+        primary_care_physician=patient_data['primary_care_physician'],
+        social_security_number=patient_data['social_security_number'],
+        responsible_party_name=patient_data['responsible_party_name'],
+        responsible_party_phone=patient_data['responsible_party_phone'],
+        responsible_party_relation=patient_data['responsible_party_relation'],
+        responsible_party_email=patient_data['responsible_party_email'],
+    )
 
     patient.save()
     return patient
