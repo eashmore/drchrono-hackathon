@@ -54,7 +54,7 @@ def home_view(request):
     if request.method == 'POST':
         patients = Patient.objects.all()
         patient = find_patient(patients, request.POST)
-        if patient == None:
+        if patient is None:
             messages.error(request, 'Patient was not found.')
         else:
             doctor = request.user.doctor
@@ -349,7 +349,8 @@ class MedicationView(generic.DetailView):
             medication.save()
             send_update_message(request.user.email, medication, old_data)
             medicationJSON = serializers.serialize("json", [medication])
-            return HttpResponse(medicationJSON, content_type='application/json')
+            return HttpResponse(medicationJSON,
+                                content_type='application/json')
 
         return HttpResponse(status=500)
 

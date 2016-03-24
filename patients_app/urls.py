@@ -46,16 +46,19 @@ urlpatterns = [
         name='medication_list'),
     url(r'^patient/medication/(?P<pk>[0-9]+)/$',
         login_required(views.medication_edit_view), name='medication_edit'),
-    url(r'^patient/medications/new$', login_required(views.add_medication_view),
-        name='medication_new'),
+    url(r'^patient/medications/new$',
+        login_required(views.add_medication_view), name='medication_new'),
 
     # API
     url(r'^api/problems/$', login_required(views.Problem_Index_View.as_view()),
         name='problem_index'),
     url(r'^api/problem/(?P<pk>[0-9]+)/$',
         login_required(views.ProblemView.as_view()), name='problem'),
-    url(r'^api/allergies/$', login_required(views.Allergy_Index_View.as_view()),
-        name='allergy_index'),
+    url(
+        r'^api/allergies/$',
+        login_required(views.Allergy_Index_View.as_view()),
+        name='allergy_index'
+    ),
     url(r'^api/allergy/(?P<pk>[0-9]+)/$',
         login_required(views.AllergyView.as_view()), name='allergy'),
     url(

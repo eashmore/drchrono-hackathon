@@ -14,11 +14,13 @@ from secrets import CLIENT_ID, CLIENT_SECRET, REDIRECT_URL, EMAIL_PASSWORD
 
 import os
 
+
 CLIENT_DATA = {
     'client_id': CLIENT_ID,
     'client_secret': CLIENT_SECRET,
     'redirect_url': REDIRECT_URL
 }
+
 
 EMAIL_USE_TLS = True
 

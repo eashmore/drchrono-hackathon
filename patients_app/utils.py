@@ -19,6 +19,7 @@ def num_to_str(field):
 
     return ''
 
+
 def str_to_date(date_str):
     if date_str:
         return datetime.datetime.strptime(date_str, '%Y-%m-%d')

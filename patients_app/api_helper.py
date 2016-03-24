@@ -120,15 +120,15 @@ def get_patient_data(patient, access_token, user):
 def save_problems(problem_data, patient):
     for data in problem_data:
         problem = Problem(
-            id = data['id'],
-            patient = patient,
-            date_changed = data['date_changed'],
-            date_diagnosis = data['date_diagnosis'],
-            date_onset = data['date_onset'],
-            description = data['description'],
-            name = data['name'],
-            notes = data['notes'],
-            status = data['status']
+            id=data['id'],
+            patient=patient,
+            date_changed=data['date_changed'],
+            date_diagnosis=data['date_diagnosis'],
+            date_onset=data['date_onset'],
+            description=data['description'],
+            name=data['name'],
+            notes=data['notes'],
+            status=data['status']
         )
         problem.save()
 
@@ -136,22 +136,22 @@ def save_problems(problem_data, patient):
 def save_medications(med_data, patient, user):
     for data in med_data:
         medication = Medication(
-            id = data['id'],
-            patient = patient,
-            doctor = user,
-            daw = data['daw'],
-            name = data['name'],
-            prn = data['prn'],
-            date_prescribed = data['date_prescribed'],
-            date_started_taking = data['date_started_taking'],
-            date_stopped_taking = data['date_stopped_taking'],
-            dispense_quantity = data['dispense_quantity'],
-            dosage_quantity = data['dosage_quantity'],
-            notes = data['notes'],
-            frequency = data['frequency'],
-            number_refills = data['number_refills'],
-            order_status = data['order_status'],
-            status = data['status']
+            id=data['id'],
+            patient=patient,
+            doctor=user,
+            daw=data['daw'],
+            name=data['name'],
+            prn=data['prn'],
+            date_prescribed=data['date_prescribed'],
+            date_started_taking=data['date_started_taking'],
+            date_stopped_taking=data['date_stopped_taking'],
+            dispense_quantity=data['dispense_quantity'],
+            dosage_quantity=data['dosage_quantity'],
+            notes=data['notes'],
+            frequency=data['frequency'],
+            number_refills=data['number_refills'],
+            order_status=data['order_status'],
+            status=data['status']
         )
         medication.save()
 
@@ -170,10 +170,10 @@ def save_medications(med_data, patient, user):
 # def save_insurances(insurance_data, patient):
 #     for data in insurance_data['results']:
 #         insurance = Insurance(
-#             patient = patient,
-#             payer_name = data['payer_name'],
-#             state = data['state'],
-#             ranks = data['status']
+#             patient=patient,
+#             payer_name=data['payer_name'],
+#             state=data['state'],
+#             ranks=data['status']
 #         )
 #         insurance.save()
 
@@ -182,11 +182,11 @@ def save_allergies(allergies_data, patient):
 
     for data in allergies_data:
         allergies = Allergy(
-            patient = patient,
-            id = data['id'],
-            notes = data['notes'],
-            reaction = data['reaction'],
-            status = data['status'],
+            patient=patient,
+            id=data['id'],
+            notes=data['notes'],
+            reaction=data['reaction'],
+            status=data['status'],
         )
         allergies.save()
 

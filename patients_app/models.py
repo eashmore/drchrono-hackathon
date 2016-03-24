@@ -41,7 +41,9 @@ class Patient(models.Model):
     employer_address = models.CharField(max_length=200, blank=True)
     employer_state = models.CharField(max_length=200, blank=True)
     employer_zip_code = models.CharField(blank=True, max_length=200)
-    primary_care_physician = models.CharField(max_length=200, blank=True, null=True)
+    primary_care_physician = models.CharField(
+        max_length=200, blank=True, null=True
+    )
     zip_code = models.CharField(max_length=5, blank=True, null=True)
     state = models.CharField(max_length=2, blank=True, null=True)
     social_security_number = models.CharField(max_length=20, blank=True)
