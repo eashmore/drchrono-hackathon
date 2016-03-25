@@ -28,7 +28,7 @@ function handleProblem(e) {
   }
 }
 
-function updateProblem($form, button) {
+function updateProblem($form) {
   data = $form.serialize();
   problemId = $form.data('problem');
   $.ajax({
@@ -39,12 +39,12 @@ function updateProblem($form, button) {
       xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
     },
     success: function() {
-      button.disabled = false;
+      $('#save-problem-btn').prop('disabled', false);
       $('#success-save').removeClass('display-none');
       $('#save-screen').addClass('display-none');
     },
     error: function() {
-      button.disabled = false;
+      $('#save-problem-btn').prop('disabled', false);
       $('#error-save').removeClass('display-none');
       $('#save-screen').addClass('display-none');
     }

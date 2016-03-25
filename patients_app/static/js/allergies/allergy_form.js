@@ -20,15 +20,15 @@ function setAllergyStatus() {
 function handleAllergy(e) {
   $('#save-screen').removeClass('display-none');
   var $form = $('#allergy-form');
+  var saveButton = e.currentTarget;
+  saveButton.disabled = true;
   if ($form.attr("method") === 'PATCH') {
     e.preventDefault();
-    var saveButton = e.currentTarget;
-    saveButton.disabled = true;
     updateAllergy($form, saveButton);
   }
 }
 
-function updateAllergy($form, button) {
+function updateAllergy($form) {
   data = $form.serialize();
   allergyId = $form.data('allergy');
   $.ajax({
@@ -39,12 +39,12 @@ function updateAllergy($form, button) {
       xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
     },
     success: function() {
-      button.disabled = false;
+      $('#save-allergy-btn').prop('disabled', false);
       $('#success-save').removeClass('display-none');
       $('#save-screen').addClass('display-none');
     },
     error: function() {
-      button.disabled = false;
+      $('#save-allergy-btn').prop('disabled', false);
       $('#error-save').removeClass('display-none');
       $('#save-screen').addClass('display-none');
     }

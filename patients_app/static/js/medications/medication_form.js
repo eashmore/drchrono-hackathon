@@ -20,15 +20,15 @@ function setMedicationStatus() {
 function handleMedication(e) {
   $('#save-screen').removeClass('display-none');
   var $form = $('#medication-form');
+  var saveButton = e.currentTarget;
+  saveButton.disabled = true;
   if ($form.attr("method") === 'PATCH') {
     e.preventDefault();
-    var saveButton = e.currentTarget;
-    saveButton.disabled = true;
     updateMedication($form, saveButton);
   }
 }
 
-function updateMedication($form, button) {
+function updateMedication($form) {
   data = $form.serialize();
   data += dawJson();
   data += prnJson();
@@ -41,19 +41,19 @@ function updateMedication($form, button) {
       xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
     },
     success: function() {
-      button.disabled = false;
+      $('#save-meds-btn').prop('disabled', false);
       $('#success-save').removeClass('display-none');
       $('#save-screen').addClass('display-none');
     },
     error: function() {
-      button.disabled = false;
+      $('#save-meds-btn').prop('disabled', false);
       $('#error-save').removeClass('display-none');
       $('#save-screen').addClass('display-none');
     }
   });
 }
 
-function getDaw() {
+function dawJson() {
   var checked = $('.daw-checkbox').attr('checked');
   if (checked) {
     return '&daw=false';
@@ -61,7 +61,7 @@ function getDaw() {
   return '&daw=true';
 }
 
-function getPrn(data) {
+function prnJson(data) {
   var checked = $('.prn-checkbox').attr('checked');
   if (checked) {
     return '&prn=false';
