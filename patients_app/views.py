@@ -37,6 +37,7 @@ def oauth_view(request):
             username=user.username,
             password=user.doctor.set_random_password()
         )
+
         login(request, auth_user)
         return redirect('patients_app:home')
 
@@ -74,6 +75,7 @@ def find_patient(patients, data):
         first_name=data['first_name'],
         social_security_number__endswith=data['ssn']
     )
+
     if patient.exists():
         return patient.first()
 

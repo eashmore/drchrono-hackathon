@@ -30,6 +30,7 @@ def exchange_token(params):
         'client_id': CLIENT_DATA['client_id'],
         'client_secret': CLIENT_DATA['client_secret'],
     }
+
     response = requests.post('https://drchrono.com/o/token/', content)
     response.raise_for_status()
     data = response.json()
@@ -75,20 +76,42 @@ def save_user(doctor_data, access_token):
 def get_patients(user, access_token):
     endpoint = 'patients'
     patients = get_paginated_data(endpoint, access_token)
+
     for patient_data in patients:
         patient = save_patient(patient_data, user)
         get_patient_data(patient, access_token, user)
 
 
 def save_patient(patient_data, user):
-    patient_attrs = Patient.column_list()
-    kwargs = {}
-    for attr in patient_attrs:
-        kwargs[attr] = patient_data[attr]
+    patient = Patient(
+        id=patient_data['id'],
+        doctor=user,
+        first_name=patient_data['first_name'],
+        middle_name=patient_data['middle_name'],
+        last_name=patient_data['last_name'],
+        address=patient_data['address'],
+        email=patient_data['email'],
+        home_phone=patient_data['home_phone'],
+        cell_phone=patient_data['cell_phone'],
+        city=patient_data['city'],
+        zip_code=patient_data['zip_code'],
+        state=patient_data['state'],
+        emergency_contact_name=patient_data['emergency_contact_name'],
+        emergency_contact_phone=patient_data['emergency_contact_phone'],
+        emergency_contact_relation=patient_data['emergency_contact_relation'],
+        employer=patient_data['employer'],
+        employer_city=patient_data['employer_city'],
+        employer_state=patient_data['employer_state'],
+        employer_address=patient_data['employer_address'],
+        employer_zip_code=patient_data['employer_zip_code'],
+        primary_care_physician=patient_data['primary_care_physician'],
+        social_security_number=patient_data['social_security_number'],
+        responsible_party_name=patient_data['responsible_party_name'],
+        responsible_party_phone=patient_data['responsible_party_phone'],
+        responsible_party_relation=patient_data['responsible_party_relation'],
+        responsible_party_email=patient_data['responsible_party_email'],
+    )
 
-    kwargs['doctor'] = user
-    kwargs['id'] = patient_data['id']
-    patient = Patient(**kwargs)
     patient.save()
     return patient
 
@@ -130,6 +153,7 @@ def save_problems(problem_data, patient):
             notes=data['notes'],
             status=data['status']
         )
+
         problem.save()
 
 
@@ -153,6 +177,7 @@ def save_medications(med_data, patient, user):
             order_status=data['order_status'],
             status=data['status']
         )
+
         medication.save()
 
 
@@ -179,7 +204,6 @@ def save_medications(med_data, patient, user):
 
 
 def save_allergies(allergies_data, patient):
-
     for data in allergies_data:
         allergies = Allergy(
             patient=patient,
@@ -188,6 +212,7 @@ def save_allergies(allergies_data, patient):
             reaction=data['reaction'],
             status=data['status'],
         )
+
         allergies.save()
 
 
@@ -208,6 +233,7 @@ def get_paginated_data(endpoint, access_token):
     url = 'https://drchrono.com/api/%s' % endpoint
     header = {'Authorization': 'Bearer %s' % access_token}
     objects = []
+
     while url:
         response = requests.get(url, headers=header)
         data = response.json()

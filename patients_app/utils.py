@@ -71,6 +71,7 @@ def stringify_instance(instance, old_instance=False):
     if old_instance:
         instance_dict = model_to_dict(instance)
         attr_dict = {}
+
         for key in instance_dict:
             if instance_dict[key] != old_instance[key]:
                 attr_dict[key] = instance_dict[key]
@@ -82,6 +83,7 @@ def stringify_instance(instance, old_instance=False):
 
 def build_message(attr_dict):
     message = ''
+
     for key in attr_dict:
         if key != 'id':
             message += "{0}: {1}\n".format(key, attr_dict[key])
