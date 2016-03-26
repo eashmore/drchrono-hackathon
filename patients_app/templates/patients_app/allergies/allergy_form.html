@@ -3,7 +3,9 @@
 {% load staticfiles %}
 
 <h2>Allergy</h2>
-<form id="allergy-form" action="{% url 'patients_app:allergy_index' %}" method="{{ method }}" data-allergy="{{ allergy.id }}">
+<form id="allergy-form" action="{% url 'patients_app:allergy_index' %}"
+  method="{{ method }}" data-allergy="{{ allergy.id }}"
+>
   {% csrf_token %}
   <div id="allergy-info">
     <div class="form-title">Reaction</div>

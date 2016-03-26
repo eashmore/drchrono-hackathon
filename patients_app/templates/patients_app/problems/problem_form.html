@@ -3,7 +3,9 @@
 {% load staticfiles %}
 
 <h2>Problem</h2>
-<form id="problem-form" action="{% url 'patients_app:problem_index' %}" method="{{ method }}" data-problem="{{ problem.id }}">
+<form id="problem-form" action="{% url 'patients_app:problem_index' %}"
+  method="{{ method }}" data-problem="{{ problem.id }}"
+>
 
   {% csrf_token %}
   <div id="problem-info">
@@ -14,15 +16,15 @@
       <div class="form-title">
         Description
       </div>
-      <textarea class="text-area" name="description" rows="8" cols="40">{{ problem.description }}</textarea>
-    </label><br>
+      <textarea class="text-area" name="description" rows="8"
+        cols="40">{{ problem.description }}</textarea>
+    </label>
     <div class="form-title">Current status</div>
-      <select name="status">
-        <option id="problem-active" value="active">active</option>
-        <option id="problem-inactive" value="inactive">inactive</option>
-        <option id="problem-resolved" value="resolved">resolved</option>
-      </select>
-    </label><br>
+    <select name="status">
+      <option id="problem-active" value="active">active</option>
+      <option id="problem-inactive" value="inactive">inactive</option>
+      <option id="problem-resolved" value="resolved">resolved</option>
+    </select>
   </div>
 
   <div id="problem-dates">
@@ -32,7 +34,7 @@
     </label><br>
     <label>Date of diagnosis:
       <input class="input-med" type="date" name="date_diagnosis" value="{{ diagnosis_date }}">
-    </label><br>
+    </label>
   </div>
 
   <div id="problem-notes">
@@ -40,9 +42,7 @@
       <div class="form-title">Additional notes</div>
       <textarea class="text-area" name="notes" rows="8" cols="40">{{ problem.notes }}</textarea>
     </label>
-
   </div>
-
   <button id="save-problem-btn" class="btn" type="submit" name="button">Save</button>
 </form>
 

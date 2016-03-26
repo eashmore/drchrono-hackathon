@@ -30,71 +30,103 @@
       <input class="input-lg" type="text" name="email" value="{{ patient.email }}">
     </label>
     <label>Home Phone:
-      <input class="input-med" type="text" name="home_phone" value="{{ patient.home_phone }}">
+      <input class="input-med" type="text" name="home_phone"
+        value="{{ patient.home_phone }}"
+      >
     </label>
     <label>Cell Phone:
-      <input class="input-med" type="text" name="cell_phone" value="{{ patient.cell_phone }}">
+      <input class="input-med" type="text" name="cell_phone"
+        value="{{ patient.cell_phone }}"
+      >
     </label>
   </div>
 
   <div id="patient-primary">
     <div class="form-title">Primary Care Physician</div>
     <label>Name:
-      <input class="input-lg" type="text" name="primary_care_physician" value="{{ patient.primary_care_physician }}">
+      <input class="input-lg" type="text" name="primary_care_physician"
+        value="{{ patient.primary_care_physician }}"
+      >
     </label>
   </div>
 
   <div id="patient-employer">
     <div class="form-title">Employer Info</div>
     <label>Employer Name:
-      <input class="input-lg" type="text" name="employer" value="{{ patient.employer }}">
+      <input class="input-lg" type="text" name="employer"
+        value="{{ patient.employer }}"
+      >
     </label>
     <label>Address:
-      <input class="input-lg" type="text" name="employer_address" value="{{ patient.employer_address }}">
+      <input class="input-lg" type="text" name="employer_address"
+        value="{{ patient.employer_address }}"
+      >
     </label>
     <label>City:
-      <input class="input-med" type="text" name="employer_city" value="{{ patient.employer_city }}">
+      <input class="input-med" type="text" name="employer_city"
+        value="{{ patient.employer_city }}"
+      >
     </label>
     <br>
     <label>State:
-      <input class="input-sm" type="text" name="employer_state" value="{{ patient.employer_state }}">
+      <input class="input-sm" type="text" name="employer_state"
+        value="{{ patient.employer_state }}"
+      >
     </label>
     <label>Zip Code:
-      <input class="input-sm" type="text" name="employer_zip_code" value="{{ patient.employer_zip_code }}">
+      <input class="input-sm" type="text" name="employer_zip_code"
+        value="{{ patient.employer_zip_code }}"
+      >
     </label>
   </div>
 
   <div id="patient-emergency">
     <div class="form-title">Emergency Contact Info</div>
     <label>Emergency Contact Name
-      <input class="input-lg" type="text" name="emergency_contact_name" value="{{ patient.emergency_contact_name }}">
+      <input class="input-lg" type="text" name="emergency_contact_name"
+        value="{{ patient.emergency_contact_name }}"
+      >
     </label>
     <label>Relation
-      <input class="input-med" type="text" name="emergency_contact_relation" value="{{ patient.emergency_contact_relation }}">
+      <input class="input-med" type="text" name="emergency_contact_relation"
+        value="{{ patient.emergency_contact_relation }}"
+      >
     </label>
     <label>Phone Number
-      <input class="input-med" type="text" name="emergency_contact_phone" value="{{ patient.emergency_contact_phone }}">
+      <input class="input-med" type="text" name="emergency_contact_phone"
+        value="{{ patient.emergency_contact_phone }}"
+      >
     </label>
   </div>
 
   <div id="patient-reponsible">
     <div class="form-title">Responsible Party</div>
     <label>Name:
-      <input class="input-lg" type="text" name="responsible_party_name" value="{{ patient.responsible_party_name }}">
+      <input class="input-lg" type="text" name="responsible_party_name"
+        value="{{ patient.responsible_party_name }}"
+      >
     </label>
     <label>Relation:
-      <input class="input-med" type="text" name="responsible_party_relation" value="{{ patient.responsible_party_relation }}">
+      <input class="input-med" type="text" name="responsible_party_relation"
+        value="{{ patient.responsible_party_relation }}"
+      >
     </label>
     <br>
     <label>Phone Number:
-      <input class="input-med" type="text" name="responsible_party_phone" value="{{ patient.responsible_party_phone }}">
+      <input class="input-med" type="text" name="responsible_party_phone"
+        value="{{ patient.responsible_party_phone }}"
+      >
     </label>
     <label>Email:
-      <input class="input-lg" type="text" name="responsible_party_email" value="{{ patient.responsible_party_email }}">
+      <input class="input-lg" type="text" name="responsible_party_email"
+        value="{{ patient.responsible_party_email }}"
+      >
     </label>
   </div>
 
-  <button id="update-patient-btn" class="btn" type="submit" name="button">Update</button>
+  <button id="update-patient-btn" class="btn" type="submit" name="button">
+    Update
+  </button>
 </form>
 {% include 'patients_app/include/_loading_screen.html' %}
 

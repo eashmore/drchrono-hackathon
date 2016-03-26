@@ -4,8 +4,12 @@
   <head>
     <meta charset="utf-8">
     <title>Patients</title>
-    <link rel="stylesheet" href="{% static 'style/style.css' %}" media="screen" title="no title" charset="utf-8">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{% static 'style/style.css' %}" media="screen"
+      title="no title" charset="utf-8"
+    >
+    <link rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"
+    >
   </head>
   <body>
     {% if request.user.is_authenticated %}
@@ -17,14 +21,8 @@
         </a>
       {% endif %}
     {% endif %}
+    {% include 'patients_app/include/_messages.html' %}
     <div id="main">
-      {% if messages %}
-        <ul class="messages">
-            {% for message in messages %}
-            <li{% if message.tags %} class="save-result {{ message.tags }}"{% endif %}>{{ message }}</li>
-            {% endfor %}
-        </ul>
-      {% endif %}
       {% block content %}
       {% endblock %}
     </div>
